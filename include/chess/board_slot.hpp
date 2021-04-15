@@ -2,6 +2,7 @@
 #define BOARD_SLOT_H
 
 #include <memory>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "chess/chess_piece.hpp"
 #include "chess/utils/settings.hpp"
@@ -20,6 +21,8 @@ enum BoardStatus {
 // Forward definition of the ChessPiece class
 class ChessPiece;
 
+
+typedef typename std::vector<std::vector<BoardSlot>> BoardSlots;
 
 /**
  * @brief Structure representing a slot of the chessboard

@@ -32,7 +32,7 @@ struct BoardSlot {
     std::shared_ptr<ChessPiece> piece;
     BoardStatus status;
 
-    void highlight_slot(bool highlight);
+    void highlight(bool highlight_slot);
 };
 
 #endif // BOARD_SLOT_H

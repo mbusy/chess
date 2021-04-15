@@ -218,7 +218,11 @@ void Chessboard::_draw_board() {
 }
 
 void Chessboard::_clear_highlighted_slots() {
-
+    for (auto&& row : this->board) {
+        for (auto&& slot : row) {
+            slot.highlight(false);
+        } 
+    }
 }
 
 /**
@@ -250,13 +254,13 @@ void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
             break;
 
         case EMPTY:
-            // this->_clear_highlighted_slots();
+            this->_clear_highlighted_slots();
             break;
     }
 }
 
 void Chessboard::_on_occupied_slot_clicked(BoardSlot& slot) {
-    
+
 }
 
 void Chessboard::_on_highlighted_slot_clicked(BoardSlot& slot) {

@@ -1,7 +1,7 @@
 #include "chess/board_slot.hpp"
 
-void BoardSlot::highlight_slot(bool highlight) {
-    if (highlight) {
+void BoardSlot::highlight(bool highlight_slot) {
+    if (highlight_slot) {
         this->status = HIGHLIGHTED;
         
         if (this->piece == nullptr) {

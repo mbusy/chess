@@ -20,11 +20,13 @@ class ChessPiece {
 public:
     virtual void draw(sf::RenderWindow& window) const = 0;
 
-    // virtual void show_possible_move_location(
-    //     std::vector<BoardSlot>& slots) const = 0;
+    virtual void show_possible_moves(
+        BoardSlots& slots,
+        const sf::Vector2i& position) const = 0;
     
-    // virtual std::vector<sf::Vector2i> getPossibleMoveLocation(
-    //     const std::vector<BoardSlot>& slots) const = 0;
+    virtual std::vector<sf::Vector2i> compute_possible_moves(
+        const BoardSlots& slots,
+        const sf::Vector2i& position) const = 0;
 
 
     PieceType get_piece_type() const;

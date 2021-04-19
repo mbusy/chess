@@ -80,40 +80,40 @@ void Chessboard::_initialize_board() {
     int offsetx = (this->window.getSize().x - (this->cell_size * 8)) / 2;
     int offsety = (this->window.getSize().y - (this->cell_size * 8)) / 2;
 
-    this->board.clear();
-    this->board.resize(BOARD_WIDTH);
+    this->slots.clear();
+    this->slots.resize(BOARD_WIDTH);
 
     for (int row = 0; row < BOARD_HEIGHT; ++row) {
-        this->board[row].resize(BOARD_WIDTH);
+        this->slots[row].resize(BOARD_WIDTH);
 
         for (int col = 0; col < BOARD_WIDTH; ++col) {
-            this->board[row][col].rect.setSize(sf::Vector2f(
+            this->slots[row][col].rect.setSize(sf::Vector2f(
                 this->cell_size,
                 this->cell_size));
             
-            this->board[row][col].rect.setFillColor(white ?
+            this->slots[row][col].rect.setFillColor(white ?
                 utils::Settings::get_light_square_color() :
                 utils::Settings::get_dark_square_color());
             
-            this->board[row][col].rect.setPosition(
+            this->slots[row][col].rect.setPosition(
                 offsetx + col * this->cell_size,
                 offsety + row * this->cell_size);
             
-            this->board[row][col].status = EMPTY;
+            this->slots[row][col].status = EMPTY;
 
-            this->board[row][col].circle_highlight.setFillColor(
+            this->slots[row][col].circle_highlight.setFillColor(
                 utils::Settings::get_highlighted_color());
-            this->board[row][col].circle_highlight.setOutlineColor(
+            this->slots[row][col].circle_highlight.setOutlineColor(
                 utils::Settings::get_highlighted_color());
             
-            this->board[row][col].circle_highlight.setRadius(
+            this->slots[row][col].circle_highlight.setRadius(
                 this->cell_size / 2.0);
 
-            this->board[row][col].circle_highlight.setOrigin(
+            this->slots[row][col].circle_highlight.setOrigin(
                 this->cell_size / 2.0,
                 this->cell_size / 2.0);
 
-            this->board[row][col].circle_highlight.setPosition(
+            this->slots[row][col].circle_highlight.setPosition(
                 offsetx + col * this->cell_size + cell_size / 2.0,
                 offsety + row * this->cell_size + cell_size / 2.0);
 
@@ -129,7 +129,7 @@ void Chessboard::_initialize_board() {
  * 
  */
 void Chessboard::_populate_board() {
-    if (this->board.empty()) {
+    if (this->slots.empty()) {
         throw std::runtime_error(
             "Can't populate board if it has not been initialized");
     }
@@ -166,30 +166,30 @@ void Chessboard::_populate_board() {
 
         for (int j = 0; j <= 1; ++j) {
             if (j == 0) {
-                this->board[row][col].piece = pieces[i];
+                this->slots[row][col].piece = pieces[i];
             }
             else if (row == 0) {
                 row += 1;
-                this->board[row][col].piece = std::make_shared<Pawn>(
+                this->slots[row][col].piece = std::make_shared<Pawn>(
                     Pawn(PieceId::BLACK));
             }
             else if (row != 0) {
                 row -= 1;
-                this->board[row][col].piece = std::make_shared<Pawn>(
+                this->slots[row][col].piece = std::make_shared<Pawn>(
                     Pawn(PieceId::WHITE));
             }
 
-            this->board[row][col].status = OCCUPIED;
-            sprite = this->board[row][col].piece->get_sprite();
+            this->slots[row][col].status = OCCUPIED;
+            sprite = this->slots[row][col].piece->get_sprite();
             piece_scale_x = this->cell_size / sprite.getTexture()->getSize().x;
             piece_scale_y = this->cell_size / sprite.getTexture()->getSize().y;
 
-            this->board[row][col].piece->get_sprite().setScale(
+            this->slots[row][col].piece->get_sprite().setScale(
                 piece_scale_x,
                 piece_scale_y);
             
-            this->board[row][col].piece->get_sprite().setPosition(
-                this->board[row][col].rect.getPosition());
+            this->slots[row][col].piece->get_sprite().setPosition(
+                this->slots[row][col].rect.getPosition());
         }
     }
 }
@@ -202,23 +202,23 @@ void Chessboard::_draw_board() {
     for (int i = 0; i < BOARD_WIDTH; ++i) {
         for (int j = 0; j < BOARD_HEIGHT; ++j) {
             // Draw the slot rectangle
-            this->window.draw(this->board[i][j].rect);
+            this->window.draw(this->slots[i][j].rect);
 
             // Draw the circle highlight if the slot is highlighted
-            if (this->board[i][j].status == HIGHLIGHTED) {
-                this->window.draw(this->board[i][j].circle_highlight);
+            if (this->slots[i][j].status == HIGHLIGHTED) {
+                this->window.draw(this->slots[i][j].circle_highlight);
             }
 
             // Draw the chess piece
-            if (this->board[i][j].piece.get() != nullptr) {
-                this->board[i][j].piece->draw(window);
+            if (this->slots[i][j].piece.get() != nullptr) {
+                this->slots[i][j].piece->draw(window);
             }
         }
     }    
 }
 
 void Chessboard::_clear_highlighted_slots() {
-    for (auto&& row : this->board) {
+    for (auto&& row : this->slots) {
         for (auto&& slot : row) {
             slot.highlight(false);
         } 
@@ -242,15 +242,17 @@ void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
         position.y / this->cell_size,
         position.x / this->cell_size);
 
-    switch (this->board[cell_position.x][cell_position.y].status) {
+    switch (this->slots[cell_position.x][cell_position.y].status) {
         case HIGHLIGHTED:
             this->_on_highlighted_slot_clicked(
-                this->board[cell_position.x][cell_position.y]);
+                this->slots[cell_position.x][cell_position.y],
+                cell_position);
             break;
 
         case OCCUPIED:
             this->_on_occupied_slot_clicked(
-                this->board[cell_position.x][cell_position.y]);
+                this->slots[cell_position.x][cell_position.y],
+                cell_position);
             break;
 
         case EMPTY:
@@ -259,10 +261,14 @@ void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
     }
 }
 
-void Chessboard::_on_occupied_slot_clicked(BoardSlot& slot) {
-
+void Chessboard::_on_occupied_slot_clicked(
+        BoardSlot& slot,
+        const sf::Vector2i& position) {
+    // TODO: check that the color of the piece clicked is the player's color
 }
 
-void Chessboard::_on_highlighted_slot_clicked(BoardSlot& slot) {
-
+void Chessboard::_on_highlighted_slot_clicked(
+        BoardSlot& slot,
+        const sf::Vector2i& position) {
+    // move
 }

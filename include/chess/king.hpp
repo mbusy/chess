@@ -10,10 +10,13 @@ public:
         const PieceId& piece_id = WHITE);
     
     void draw(sf::RenderWindow& window) const;
-    // void show_possible_move_location(std::vector<BoardSlot>& slots) const;
+    void show_possible_moves(
+        BoardSlot& slots,
+        const sf::Vector2i& position) const;
     
-    // std::vector<sf::Vector2i> getPossibleMoveLocation(
-    //     const std::vector<BoardSlot>& slots) const;
+    std::vector<sf::Vector2i> compute_possible_moves(
+        const BoardSlot& slots,
+        const sf::Vector2i& position) const;
 };
 
 

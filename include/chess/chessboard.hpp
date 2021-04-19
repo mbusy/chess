@@ -34,7 +34,7 @@ public:
 private:
     float cell_size;
     sf::RenderWindow& window;
-    std::vector<std::vector<BoardSlot>> board;
+    BoardSlots slots;
 
     void _initialize_board();
     void _populate_board();
@@ -43,8 +43,13 @@ private:
     void _clear_highlighted_slots();
 
     void _on_mouse_clicked(const sf::Vector2i& position);
-    void _on_occupied_slot_clicked(BoardSlot& slot);
-    void _on_highlighted_slot_clicked(BoardSlot& slot);
+    void _on_occupied_slot_clicked(
+        BoardSlot& slot,
+        const sf::Vector2i& position);
+    
+    void _on_highlighted_slot_clicked(
+        BoardSlot& slot,
+        const sf::Vector2i& position);
 };
 
 #endif // CHESSBOARD_H

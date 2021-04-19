@@ -15,3 +15,19 @@ King::King(const PieceId& piece_id) {
 void King::draw(sf::RenderWindow& window) const {
     window.draw(this->sprite);
 }
+
+void King::show_possible_moves(
+        BoardSlot& slots,
+        const sf::Vector2i& position) const {
+    
+    std::vector<sf::Vector2i> positions = this->compute_possible_moves(
+        slots,
+        position);
+}
+
+std::vector<sf::Vector2i> King::compute_possible_moves(
+        const BoardSlot& slots,
+        const sf::Vector2i& position) const {
+    
+    
+}

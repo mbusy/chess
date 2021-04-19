@@ -11,8 +11,8 @@ enum PieceType {
 };
 
 enum PieceDirection {
-    UP = 1,
-    DOWN = -1
+    UP = -1,
+    DOWN = 1
 };
 
 enum PieceId {

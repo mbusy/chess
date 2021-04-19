@@ -193,7 +193,8 @@ void Chessboard::_populate_board() {
         }
     }
 
-    this->_move_piece(this->slots[0][4], this->slots[2][4]);
+    // TODO: for testing purposes, to be removed
+    // this->_move_piece(this->slots[0][4], this->slots[2][4]);
 }
 
 /**

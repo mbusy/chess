@@ -192,6 +192,8 @@ void Chessboard::_populate_board() {
                 this->slots[row][col].rect.getPosition());
         }
     }
+
+    this->_move_piece(this->slots[0][4], this->slots[2][4]);
 }
 
 /**
@@ -217,6 +219,58 @@ void Chessboard::_draw_board() {
     }    
 }
 
+/**
+ * @brief Moves a piece on the board
+ * 
+ * @param origin 
+ * @param destination 
+ */
+void Chessboard::_move_piece(
+        BoardSlot& origin_slot,
+        BoardSlot& destination_slot) {
+
+    if (this->slots.empty()) {
+        throw std::runtime_error("Empty board, cannot move pieces");
+    }
+    else if (origin_slot.status == EMPTY) {
+        throw std::runtime_error("Cannot move an inexisting piece");
+    }
+
+    // Capture the destination piece if it exists
+    if (destination_slot.piece.get() != nullptr) {
+        this->_capture_piece(destination_slot);    
+    }
+
+    origin_slot.piece->get_sprite().setPosition(
+        destination_slot.rect.getPosition());
+
+    destination_slot.piece = std::move(origin_slot.piece);
+    
+    origin_slot.status = EMPTY;
+    destination_slot.status = OCCUPIED;
+}
+
+/**
+ * @brief Captures a piece, removing it from the board
+ * 
+ * @param position 
+ */
+void Chessboard::_capture_piece(BoardSlot& slot) {
+    if (this->slots.empty()) {
+        throw std::runtime_error("Empty board, cannot capture pieces");
+    }
+    else if (slot.status == EMPTY) {
+        throw std::runtime_error("Cannot capture an inexisting piece");
+    }
+
+    // TODO: handle the capture / points system
+    slot.piece = nullptr;
+}
+
+/**
+ * @brief Clear the highlighted
+ * 
+ */
 void Chessboard::_clear_highlighted_slots() {
     for (auto&& row : this->slots) {
         for (auto&& slot : row) {
@@ -244,15 +298,11 @@ void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
 
     switch (this->slots[cell_position.x][cell_position.y].status) {
         case HIGHLIGHTED:
-            this->_on_highlighted_slot_clicked(
-                this->slots[cell_position.x][cell_position.y],
-                cell_position);
+            this->_on_highlighted_slot_clicked(cell_position);
             break;
 
         case OCCUPIED:
-            this->_on_occupied_slot_clicked(
-                this->slots[cell_position.x][cell_position.y],
-                cell_position);
+            this->_on_occupied_slot_clicked(cell_position);
             break;
 
         case EMPTY:
@@ -261,14 +311,32 @@ void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
     }
 }
 
+/**
+ * @brief Fired when an occupied slot is clicked
+ * 
+ * @param position 
+ */
 void Chessboard::_on_occupied_slot_clicked(
-        BoardSlot& slot,
         const sf::Vector2i& position) {
+
     // TODO: check that the color of the piece clicked is the player's color
+    this->_clear_highlighted_slots();
+    this->selected_position = sf::Vector2i(position.x, position.y);
+    this->slots[position.x][position.y].piece->show_possible_moves(
+        this->slots, position);
 }
 
+/**
+ * @brief Fired when a highlighter slot is clicked
+ * 
+ * @param position 
+ */
 void Chessboard::_on_highlighted_slot_clicked(
-        BoardSlot& slot,
         const sf::Vector2i& position) {
-    // move
+
+    this->_move_piece(
+        this->slots[this->selected_position.x][this->selected_position.y],
+        this->slots[position.x][position.y]);
+
+    this->_clear_highlighted_slots();
 }

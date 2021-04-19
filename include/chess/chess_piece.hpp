@@ -10,6 +10,7 @@
 
 // Forward declaration of the BoardSlot class
 class BoardSlot;
+typedef typename std::vector<std::vector<BoardSlot>> BoardSlots;
 
 
 /**
@@ -30,6 +31,8 @@ public:
 
 
     PieceType get_piece_type() const;
+    PieceDirection get_piece_direction() const;
+    PieceId get_piece_id() const;
     sf::Sprite& get_sprite();
 
 protected:

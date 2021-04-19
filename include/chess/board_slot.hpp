@@ -22,8 +22,6 @@ enum BoardStatus {
 class ChessPiece;
 
 
-typedef typename std::vector<std::vector<BoardSlot>> BoardSlots;
-
 /**
  * @brief Structure representing a slot of the chessboard
  * 
@@ -37,5 +35,9 @@ struct BoardSlot {
 
     void highlight(bool highlight_slot);
 };
+
+// Definition of the BoardSlots type
+typedef typename std::vector<std::vector<BoardSlot>> BoardSlots;
+
 
 #endif // BOARD_SLOT_H

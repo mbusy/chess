@@ -11,11 +11,11 @@ public:
     
     void draw(sf::RenderWindow& window) const;
     void show_possible_moves(
-        BoardSlot& slots,
+        BoardSlots& slots,
         const sf::Vector2i& position) const;
     
     std::vector<sf::Vector2i> compute_possible_moves(
-        const BoardSlot& slots,
+        const BoardSlots& slots,
         const sf::Vector2i& position) const;
 };
 

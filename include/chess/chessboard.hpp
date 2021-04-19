@@ -35,20 +35,24 @@ private:
     float cell_size;
     sf::RenderWindow& window;
     BoardSlots slots;
+    sf::Vector2i selected_position;
 
     void _initialize_board();
     void _populate_board();
     void _draw_board();
 
+    void _move_piece(
+        BoardSlot& origin_slot,
+        BoardSlot& destination_slot);
+    
+    void _capture_piece(BoardSlot& slot);
     void _clear_highlighted_slots();
 
     void _on_mouse_clicked(const sf::Vector2i& position);
     void _on_occupied_slot_clicked(
-        BoardSlot& slot,
         const sf::Vector2i& position);
     
     void _on_highlighted_slot_clicked(
-        BoardSlot& slot,
         const sf::Vector2i& position);
 };
 

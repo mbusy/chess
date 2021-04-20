@@ -34,8 +34,6 @@ std::vector<sf::Vector2i> Rook::compute_possible_moves(
         const sf::Vector2i& position) const {
     
     std::vector<sf::Vector2i> possible_moves;
-
-    // Offsets vector
     std::vector<sf::Vector2i> offsets = {
         sf::Vector2i(-1, 0),
         sf::Vector2i(1, 0),
@@ -68,7 +66,7 @@ std::vector<sf::Vector2i> Rook::compute_possible_moves(
             }
             else {
                 possible_moves.push_back(candidate);
-                candidate = candidate + offset;
+                candidate += offset;
             }
         }
     }

@@ -1,10 +1,17 @@
 #include "chess/king.hpp"
 
+const int King::piece_value;
+
+
 King::King(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = KING;
 
     this->_load_texture();
+}
+
+int King::get_value() {
+    return King::piece_value;
 }
 
 void King::draw(sf::RenderWindow& window) const {

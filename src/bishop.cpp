@@ -1,10 +1,17 @@
 #include "chess/bishop.hpp"
 
+const int Bishop::piece_value;
+
+
 Bishop::Bishop(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = BISHOP;
 
     this->_load_texture();
+}
+
+int Bishop::get_value() {
+    return Bishop::piece_value;
 }
 
 void Bishop::draw(sf::RenderWindow& window) const {

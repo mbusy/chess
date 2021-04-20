@@ -1,10 +1,17 @@
 #include "chess/knight.hpp"
 
+const int Knight::piece_value;
+
+
 Knight::Knight(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = KNIGHT;
 
     this->_load_texture();
+}
+
+int Knight::get_value() {
+    return Knight::piece_value;
 }
 
 void Knight::draw(sf::RenderWindow& window) const {

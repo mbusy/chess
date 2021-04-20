@@ -1,10 +1,17 @@
 #include <chess/rook.hpp>
 
+const int Rook::piece_value;
+
+
 Rook::Rook(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = ROOK;
 
     this->_load_texture();
+}
+
+int Rook::get_value() {
+    return Rook::piece_value;
 }
 
 void Rook::draw(sf::RenderWindow& window) const {

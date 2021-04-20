@@ -1,10 +1,17 @@
 #include "chess/queen.hpp"
 
+const int Queen::piece_value;
+
+
 Queen::Queen(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = QUEEN;
 
     this->_load_texture();
+}
+
+int Queen::get_value() {
+    return Queen::piece_value;
 }
 
 void Queen::draw(sf::RenderWindow& window) const {

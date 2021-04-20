@@ -29,19 +29,18 @@ public:
         const BoardSlots& slots,
         const sf::Vector2i& position) const = 0;
 
-
     PieceType get_piece_type() const;
     PieceDirection get_piece_direction() const;
     PieceId get_piece_id() const;
     sf::Sprite& get_sprite();
 
 protected:
+    static std::map<PieceId, std::map<PieceType, sf::Texture>> texture_map;
+
     PieceType piece_type;
     PieceDirection piece_direction;
     PieceId piece_id;
     sf::Sprite sprite;
-
-    static std::map<PieceId, std::map<PieceType, sf::Texture>> texture_map;
     
     void _load_texture();
 };

@@ -1,11 +1,18 @@
 #include "chess/pawn.hpp"
 
+const int Pawn::piece_value;
+
+
 Pawn::Pawn(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_direction = piece_id == WHITE ? UP : DOWN;
     this->piece_type = PAWN;
 
     this->_load_texture();
+}
+
+int Pawn::get_value() {
+    return Pawn::piece_value;
 }
 
 void Pawn::draw(sf::RenderWindow& window) const {

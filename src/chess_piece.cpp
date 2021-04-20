@@ -1,5 +1,6 @@
 #include "chess/chess_piece.hpp"
 
+
 std::map<PieceId, std::map<PieceType, sf::Texture>> ChessPiece::texture_map;
 
 PieceType ChessPiece::get_piece_type() const {
@@ -16,4 +17,20 @@ PieceId ChessPiece::get_piece_id() const {
 
 sf::Sprite& ChessPiece::get_sprite() {
     return this->sprite;
+}
+
+void ChessPiece::_load_texture() {
+    // If the texture hasn't already been loaded, load it
+    if (ChessPiece::texture_map.find(this->piece_id) ==
+            ChessPiece::texture_map.end() ||
+            ChessPiece::texture_map[this->piece_id].find(this->piece_type) ==
+            ChessPiece::texture_map[this->piece_id].end()) {
+        
+        ChessPiece::texture_map[this->piece_id][this->piece_type].loadFromFile(
+            utils::get_piece_filepath(this->piece_id, this->piece_type));
+    }
+    
+    // Apply the texture to the sprite
+    this->sprite.setTexture(
+        ChessPiece::texture_map[this->piece_id][this->piece_type]);
 }

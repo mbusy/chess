@@ -4,7 +4,7 @@ namespace utils {
 
 sf::Color Settings::dark_square_color = sf::Color(125, 135, 150);
 sf::Color Settings::light_square_color = sf::Color(232, 235, 239);
-sf::Color Settings::highlighted_color = sf::Color(50, 50, 50, 120);
+sf::Color Settings::highlighted_color = sf::Color(50, 50, 50, 60);
 
 float Settings::empty_highlight_scale = 0.3;
 float Settings::occupied_highlight_scale = 0.7;

@@ -39,10 +39,11 @@ protected:
     PieceType piece_type;
     PieceDirection piece_direction;
     PieceId piece_id;
+    sf::Sprite sprite;
 
     static std::map<PieceId, std::map<PieceType, sf::Texture>> texture_map;
-
-    sf::Sprite sprite;
+    
+    void _load_texture();
 };
 
 #endif // CHESS_PIECE_H

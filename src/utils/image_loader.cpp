@@ -1,5 +1,6 @@
 #include "chess/utils/image_loader.hpp"
 
+
 namespace utils {
 
 std::string get_piece_filepath(const PieceId& id, const PieceType& type) {

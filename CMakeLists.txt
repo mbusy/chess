@@ -20,7 +20,8 @@ set(SOURCES
     ${SRC_DIRECTORY}/pawn.cpp
     ${SRC_DIRECTORY}/queen.cpp
     ${SRC_DIRECTORY}/rook.cpp
-    ${SRC_DIRECTORY}/utils/image_loader.cpp
+    ${SRC_DIRECTORY}/utils/audio_player.cpp
+    ${SRC_DIRECTORY}/utils/resource_loader.cpp
     ${SRC_DIRECTORY}/utils/settings.cpp
 )
 

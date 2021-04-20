@@ -1,5 +1,5 @@
-#include <iostream>
 #include "chess/chessboard.hpp"
+
 
 /**
  * @brief Construct a new Chessboard:: Chessboard object
@@ -27,6 +27,10 @@ Chessboard::Chessboard(const std::string& name, sf::RenderWindow& window) :
  * 
  */
 void Chessboard::run() {
+    // Load the sounds
+    utils::AudioPlayer::load_sounds();
+
+    // Initialize and populate the board
     this->_initialize_board();
     this->_populate_board();
 
@@ -133,10 +137,6 @@ void Chessboard::_populate_board() {
         throw std::runtime_error(
             "Can't populate board if it has not been initialized");
     }
-    
-    for (int i = 0; i < BOARD_WIDTH; ++i) {
-
-    }
 
     sf::Sprite sprite;
     float piece_scale_x;
@@ -236,7 +236,11 @@ void Chessboard::_move_piece(
 
     // Capture the destination piece if it exists
     if (destination_slot.piece.get() != nullptr) {
-        this->_capture_piece(destination_slot);    
+        this->_capture_piece(destination_slot);
+        utils::AudioPlayer::play_sound(CAPTURE);    
+    }
+    else {
+        utils::AudioPlayer::play_sound(MOVE);
     }
 
     origin_slot.piece->get_sprite().setPosition(

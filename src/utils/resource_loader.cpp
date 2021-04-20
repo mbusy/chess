@@ -1,9 +1,9 @@
-#include "chess/utils/image_loader.hpp"
+#include "chess/utils/resource_loader.hpp"
 
 
 namespace utils {
 
-std::string get_piece_filepath(const PieceId& id, const PieceType& type) {
+std::string get_piece_filepath(PieceId id, PieceType type) {
     std::string filepath = "../resources/images/";
 
     switch (id) {
@@ -43,6 +43,23 @@ std::string get_piece_filepath(const PieceId& id, const PieceType& type) {
     }
 
     filepath += ".png";
+    return filepath;
+}
+
+std::string get_sound_filepath(ChessSound sound_id) {
+    std::string filepath = "../resources/sounds/";
+
+    switch (sound_id) {
+        case ChessSound::MOVE:
+            filepath += "move";
+            break;
+        
+        case ChessSound::CAPTURE:
+            filepath += "capture";
+            break;
+    }
+
+    filepath += ".ogg";
     return filepath;
 }
 

@@ -14,6 +14,7 @@
 #include "chess/rook.hpp"
 
 #include "chess/utils/settings.hpp"
+#include "chess/utils/audio_player.hpp"
 
 /**
  * @brief Class representing the chessboard

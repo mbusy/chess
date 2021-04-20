@@ -5,11 +5,11 @@
 #include <SFML/Graphics.hpp>
 #include "chess/board_slot.hpp"
 #include "chess/piece_data.hpp"
-#include "chess/utils/image_loader.hpp"
+#include "chess/utils/resource_loader.hpp"
 
 
 // Forward declaration of the BoardSlot class
-class BoardSlot;
+struct BoardSlot;
 typedef typename std::vector<std::vector<BoardSlot>> BoardSlots;
 
 

@@ -10,7 +10,7 @@ Knight::Knight(PieceId piece_id) {
     this->_load_texture();
 }
 
-int Knight::get_value() {
+int Knight::get_value() const {
     return Knight::piece_value;
 }
 

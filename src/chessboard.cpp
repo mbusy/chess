@@ -277,7 +277,11 @@ void Chessboard::_capture_piece(BoardSlot& slot) {
         throw std::runtime_error("Cannot capture an inexisting piece");
     }
 
-    // TODO: handle the capture / points system
+    // Increase the score of the capturing user accordingly
+    this->current_user->set_score(
+        this->current_user->get_score() + slot.piece->get_value());
+
+    // Remove the captured piece
     slot.piece = nullptr;
 }
 
@@ -335,9 +339,10 @@ void Chessboard::_on_occupied_slot_clicked(
     
     this->_clear_highlighted_slots();
 
-    // Check that the color of the clicked piece is the player's color
+    // If the color of the player is not the same than the clicked piece,
+    // return
     if (this->current_user->get_id() !=
-            this->slots[position.x][position.y].piece->get_piece_id()) {
+            this->slots[position.x][position.y].piece->get_piece_id()) {  
         return;
     }
 

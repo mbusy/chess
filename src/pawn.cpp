@@ -11,7 +11,7 @@ Pawn::Pawn(PieceId piece_id) {
     this->_load_texture();
 }
 
-int Pawn::get_value() {
+int Pawn::get_value() const {
     return Pawn::piece_value;
 }
 

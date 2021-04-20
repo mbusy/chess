@@ -8,8 +8,7 @@ class Bishop : public ChessPiece {
 public:
     explicit Bishop(PieceId piece_id = WHITE);
     
-    static int get_value();    
-    
+    int get_value() const;
     void draw(sf::RenderWindow& window) const;
     void show_possible_moves(
         BoardSlots& slots,

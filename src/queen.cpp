@@ -10,7 +10,7 @@ Queen::Queen(PieceId piece_id) {
     this->_load_texture();
 }
 
-int Queen::get_value() {
+int Queen::get_value() const {
     return Queen::piece_value;
 }
 

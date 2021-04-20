@@ -8,8 +8,7 @@ class King : public ChessPiece {
 public:
     explicit King(PieceId piece_id = WHITE);
 
-    static int get_value();
-    
+    int get_value() const;
     void draw(sf::RenderWindow& window) const;
     void show_possible_moves(
         BoardSlots& slots,

@@ -19,6 +19,7 @@ typedef typename std::vector<std::vector<BoardSlot>> BoardSlots;
  */
 class ChessPiece {
 public:
+    virtual int get_value() const = 0;
     virtual void draw(sf::RenderWindow& window) const = 0;
 
     virtual void show_possible_moves(

@@ -10,7 +10,7 @@ Rook::Rook(PieceId piece_id) {
     this->_load_texture();
 }
 
-int Rook::get_value() {
+int Rook::get_value() const {
     return Rook::piece_value;
 }
 

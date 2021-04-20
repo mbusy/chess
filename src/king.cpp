@@ -10,7 +10,7 @@ King::King(PieceId piece_id) {
     this->_load_texture();
 }
 
-int King::get_value() {
+int King::get_value() const {
     return King::piece_value;
 }
 

@@ -10,7 +10,7 @@ Bishop::Bishop(PieceId piece_id) {
     this->_load_texture();
 }
 
-int Bishop::get_value() {
+int Bishop::get_value() const {
     return Bishop::piece_value;
 }
 

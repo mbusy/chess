@@ -1,6 +1,6 @@
 #include <chess/rook.hpp>
 
-Rook::Rook(const PieceId& piece_id) {
+Rook::Rook(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = ROOK;
 

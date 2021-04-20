@@ -1,6 +1,6 @@
 #include "chess/king.hpp"
 
-King::King(const PieceId& piece_id) {
+King::King(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = KING;
 

@@ -1,6 +1,6 @@
 #include "chess/pawn.hpp"
 
-Pawn::Pawn(const PieceId& piece_id) {
+Pawn::Pawn(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_direction = piece_id == WHITE ? UP : DOWN;
     this->piece_type = PAWN;

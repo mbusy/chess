@@ -6,8 +6,7 @@
 
 class Bishop : public ChessPiece {
 public:
-    explicit Bishop(
-        const PieceId& piece_id = WHITE);
+    explicit Bishop(PieceId piece_id = WHITE);
     
     void draw(sf::RenderWindow& window) const;
     void show_possible_moves(

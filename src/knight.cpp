@@ -1,6 +1,6 @@
 #include "chess/knight.hpp"
 
-Knight::Knight(const PieceId& piece_id) {
+Knight::Knight(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = KNIGHT;
 

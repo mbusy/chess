@@ -1,6 +1,6 @@
 #include "chess/queen.hpp"
 
-Queen::Queen(const PieceId& piece_id) {
+Queen::Queen(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = QUEEN;
 

@@ -6,8 +6,7 @@
 
 class Knight : public ChessPiece {
 public:
-    explicit Knight(
-        const PieceId& piece_id = WHITE);
+    explicit Knight(PieceId piece_id = WHITE);
     
     void draw(sf::RenderWindow& window) const;
     void show_possible_moves(

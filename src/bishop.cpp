@@ -1,6 +1,6 @@
 #include "chess/bishop.hpp"
 
-Bishop::Bishop(const PieceId& piece_id) {
+Bishop::Bishop(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = BISHOP;
 

@@ -12,6 +12,7 @@
 #include "chess/pawn.hpp"
 #include "chess/queen.hpp"
 #include "chess/rook.hpp"
+#include "chess/chess_user.hpp"
 
 #include "chess/utils/settings.hpp"
 #include "chess/utils/audio_player.hpp"
@@ -31,12 +32,16 @@ public:
     Chessboard(const std::string& name, sf::RenderWindow& window);
 
     void run();
+    void reset();
 
 private:
     float cell_size;
     sf::RenderWindow& window;
     BoardSlots slots;
     sf::Vector2i selected_position;
+    ChessUser user_white;
+    ChessUser user_black;
+    std::shared_ptr<ChessUser> current_user;
 
     void _initialize_board();
     void _populate_board();

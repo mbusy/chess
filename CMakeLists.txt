@@ -14,6 +14,7 @@ set(SOURCES
     ${SRC_DIRECTORY}/board_slot.cpp
     ${SRC_DIRECTORY}/chessboard.cpp
     ${SRC_DIRECTORY}/chess_piece.cpp
+    ${SRC_DIRECTORY}/chess_user.cpp
     ${SRC_DIRECTORY}/bishop.cpp
     ${SRC_DIRECTORY}/king.cpp
     ${SRC_DIRECTORY}/knight.cpp

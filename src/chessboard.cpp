@@ -16,7 +16,7 @@ Chessboard::Chessboard(sf::RenderWindow& window) :
  * @param window 
  */
 Chessboard::Chessboard(const std::string& name, sf::RenderWindow& window) :
-        window(window) {
+        window(window), user_white(WHITE), user_black(BLACK) {
 
     this->window.setFramerateLimit(120);
     this->window.setTitle(name);
@@ -29,10 +29,7 @@ Chessboard::Chessboard(const std::string& name, sf::RenderWindow& window) :
 void Chessboard::run() {
     // Load the sounds
     utils::AudioPlayer::load_sounds();
-
-    // Initialize and populate the board
-    this->_initialize_board();
-    this->_populate_board();
+    this->reset();
 
     this->window.display();
 
@@ -67,6 +64,21 @@ void Chessboard::run() {
         this->_draw_board();
         this->window.display();
     }
+}
+
+/**
+ * @brief Resets the game, erase the player info, reset the current user to
+ * white, initialize and populate the board
+ * 
+ */
+void Chessboard::reset() {
+    this->user_white.set_score(0);
+    this->user_black.set_score(0);
+    
+    this->current_user = std::make_shared<ChessUser>(this->user_white);
+
+    this->_initialize_board();
+    this->_populate_board();
 }
 
 /**
@@ -320,9 +332,15 @@ void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
  */
 void Chessboard::_on_occupied_slot_clicked(
         const sf::Vector2i& position) {
-
-    // TODO: check that the color of the piece clicked is the player's color
+    
     this->_clear_highlighted_slots();
+
+    // Check that the color of the clicked piece is the player's color
+    if (this->current_user->get_id() !=
+            this->slots[position.x][position.y].piece->get_piece_id()) {
+        return;
+    }
+
     this->selected_position = sf::Vector2i(position.x, position.y);
     this->slots[position.x][position.y].piece->show_possible_moves(
         this->slots, position);
@@ -341,4 +359,10 @@ void Chessboard::_on_highlighted_slot_clicked(
         this->slots[position.x][position.y]);
 
     this->_clear_highlighted_slots();
+    
+    // Change the current user
+    this->current_user = std::make_shared<ChessUser>(
+        this->current_user->get_id() == WHITE ?
+            this->user_black :
+            this->user_white);
 }

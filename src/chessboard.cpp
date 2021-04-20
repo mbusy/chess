@@ -192,9 +192,6 @@ void Chessboard::_populate_board() {
                 this->slots[row][col].rect.getPosition());
         }
     }
-
-    // TODO: for testing purposes, to be removed
-    // this->_move_piece(this->slots[0][4], this->slots[2][4]);
 }
 
 /**

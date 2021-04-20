@@ -59,6 +59,10 @@ std::vector<sf::Vector2i> Pawn::compute_possible_moves(
     
     // Check the possible captures for the pawn
     for (auto y_offset : {-1, 1}) {
+        if (position.y + y_offset > 7 || position.y + y_offset < 0) {
+            continue;
+        }
+
         auto slot = slots[new_x][position.y + y_offset];
 
         if (slot.status == OCCUPIED &&

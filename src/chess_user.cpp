@@ -29,3 +29,27 @@ void ChessUser::add_piece(
 void ChessUser::clear_pieces() {
     this->pieces.clear();
 }
+
+bool ChessUser::is_checked(const BoardSlots& slots) {
+    std::vector<sf::Vector2i> offsets;
+
+    if (auto king = this->pieces[KING].at(0).lock()) {
+        // Check for checks on the diagonales
+        // offsets = {
+        //     sf::Vector2i(-1, -1),
+        //     sf::Vector2i(-1, 1),
+        //     sf::Vector2i(1, -1),
+        //     sf::Vector2i(1, 1)};
+        
+        // for 
+    }
+    else {
+        throw std::runtime_error("No king found for the user");
+    }
+
+    return false;
+}
+
+bool ChessUser::has_legal_moves(const BoardSlots& slots) {
+    return false;
+}

@@ -2,8 +2,7 @@
 #define USER_H
 
 #include <unordered_map>
-#include "chess/king.hpp"
-#include "chess/piece_data.hpp"
+#include "chess/board_slot.hpp"
 
 
 class ChessUser {
@@ -19,6 +18,9 @@ public:
         const std::shared_ptr<ChessPiece>& piece);
     
     void clear_pieces();
+
+    bool is_checked(const BoardSlots& slots);
+    bool has_legal_moves(const BoardSlots& slots);
 
 private:
     int score;

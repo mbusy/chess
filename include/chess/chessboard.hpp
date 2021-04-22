@@ -15,6 +15,7 @@
 #include "chess/chess_user.hpp"
 
 #include "chess/utils/settings.hpp"
+#include "chess/utils/helpers.hpp"
 #include "chess/utils/audio_player.hpp"
 
 /**

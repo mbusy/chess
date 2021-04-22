@@ -18,7 +18,7 @@ void AudioPlayer::load_sounds() {
             
             sf::SoundBuffer buffer;
             
-            if (!buffer.loadFromFile(get_sound_filepath(sound))) {
+            if (!buffer.loadFromFile(helpers::get_sound_filepath(sound))) {
                 throw std::runtime_error("Could not load sound");
             }
 

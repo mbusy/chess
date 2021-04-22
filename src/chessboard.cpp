@@ -110,7 +110,7 @@ void Chessboard::_initialize_board() {
                 utils::Settings::get_dark_square_color());
             
             this->slots[row][col].rect.setPosition(
-                utils::Settings::to_drawing_position(row, col));
+                utils::helpers::to_drawing_position(row, col));
             
             this->slots[row][col].status = EMPTY;
 
@@ -124,7 +124,7 @@ void Chessboard::_initialize_board() {
                 cell_size / 2.0,
                 cell_size / 2.0);
 
-            auto position = utils::Settings::to_drawing_position(row, col);
+            auto position = utils::helpers::to_drawing_position(row, col);
             this->slots[row][col].circle_highlight.setPosition(
                 position.x + cell_size / 2.0,
                 position.y + cell_size / 2.0);

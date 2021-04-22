@@ -72,8 +72,11 @@ void Chessboard::run() {
  * 
  */
 void Chessboard::reset() {
-    this->user_white.set_score(0);
     this->user_black.set_score(0);
+    this->user_white.set_score(0);
+
+    this->user_black.clear_pieces();
+    this->user_white.clear_pieces();
     
     this->current_user = std::make_shared<ChessUser>(this->user_white);
 
@@ -148,6 +151,7 @@ void Chessboard::_populate_board() {
     float piece_scale_y;
 
     auto cell_size = utils::Settings::get_cell_size();
+
     std::vector<std::shared_ptr<ChessPiece>> pieces = {
         std::make_shared<Rook>(Rook(PieceId::BLACK)),
         std::make_shared<Knight>(Knight(PieceId::BLACK)),
@@ -196,6 +200,18 @@ void Chessboard::_populate_board() {
             
             this->slots[row][col].piece->get_sprite().setPosition(
                 this->slots[row][col].rect.getPosition());
+            
+            // Add the pieces to the respective players
+            if (this->slots[row][col].piece->get_piece_id() == BLACK) {
+                this->user_black.add_piece(
+                    this->slots[row][col].piece->get_piece_type(),
+                    this->slots[row][col].piece);
+            }
+            else {
+                this->user_white.add_piece(
+                    this->slots[row][col].piece->get_piece_type(),
+                    this->slots[row][col].piece);
+            }
         }
     }
 }
@@ -366,6 +382,6 @@ void Chessboard::_on_highlighted_slot_clicked(
         this->current_user->get_id() == WHITE ?
             this->user_black :
             this->user_white);
-    
+
     // TODO: check if the next user is checked / checkmated or not
 }

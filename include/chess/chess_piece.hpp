@@ -22,19 +22,17 @@ public:
     virtual int get_value() const = 0;
     virtual void draw(sf::RenderWindow& window) const = 0;
 
-    virtual void show_possible_moves(
-        BoardSlots& slots,
-        const sf::Vector2i& position) const = 0;
-    
+    virtual void show_possible_moves(BoardSlots& slots) const = 0;
+
     virtual std::vector<sf::Vector2i> compute_possible_moves(
-        const BoardSlots& slots,
-        const sf::Vector2i& position) const = 0;
+        const BoardSlots& slots) const = 0;
 
     PieceType get_piece_type() const;
     PieceDirection get_piece_direction() const;
     PieceId get_piece_id() const;
     sf::Sprite& get_sprite();
-    sf::Vector2i get_board_index() const;
+
+    sf::Vector2i get_position() const;
 
 protected:
     static std::map<PieceId, std::map<PieceType, sf::Texture>> texture_map;

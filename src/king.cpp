@@ -18,13 +18,8 @@ void King::draw(sf::RenderWindow& window) const {
     window.draw(this->sprite);
 }
 
-void King::show_possible_moves(
-        BoardSlots& slots,
-        const sf::Vector2i& position) const {
-    
-    std::vector<sf::Vector2i> positions = this->compute_possible_moves(
-        slots,
-        position);
+void King::show_possible_moves(BoardSlots& slots) const {
+    std::vector<sf::Vector2i> positions = this->compute_possible_moves(slots);
     
     for (auto position : positions) {
         slots[position.x][position.y].highlight(true);
@@ -32,9 +27,9 @@ void King::show_possible_moves(
 }
 
 std::vector<sf::Vector2i> King::compute_possible_moves(
-        const BoardSlots& slots,
-        const sf::Vector2i& position) const {
+        const BoardSlots& slots) const {
     
+    auto position = this->get_position();
     std::vector<sf::Vector2i> possible_moves;
 
     for (int i = position.x - 1; i <= position.x + 1; ++i) {

@@ -344,7 +344,7 @@ void Chessboard::_on_occupied_slot_clicked(
 
     this->selected_position = sf::Vector2i(position.x, position.y);
     this->slots[position.x][position.y].piece->show_possible_moves(
-        this->slots, position);
+        this->slots);
 }
 
 /**

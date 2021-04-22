@@ -19,6 +19,10 @@ sf::Sprite& ChessPiece::get_sprite() {
     return this->sprite;
 }
 
+sf::Vector2i ChessPiece::get_position() const {
+    return utils::Settings::to_board_index(this->sprite.getPosition());
+}
+
 void ChessPiece::_load_texture() {
     // If the texture hasn't already been loaded, load it
     if (ChessPiece::texture_map.find(this->piece_id) ==

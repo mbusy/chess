@@ -10,13 +10,10 @@ public:
     
     int get_value() const;
     void draw(sf::RenderWindow& window) const;
-    void show_possible_moves(
-        BoardSlots& slots,
-        const sf::Vector2i& position) const;
-    
+    void show_possible_moves(BoardSlots& slots) const;
+
     std::vector<sf::Vector2i> compute_possible_moves(
-        const BoardSlots& slots,
-        const sf::Vector2i& position) const;
+        const BoardSlots& slots) const;
 
 private:
     static const int piece_value = 3;

@@ -112,6 +112,10 @@ void Chessboard::_initialize_board() {
             this->slots[row][col].rect.setPosition(
                 utils::helpers::to_drawing_position(row, col));
             
+            this->slots[row][col].checked_rect = this->slots[row][col].rect;
+            this->slots[row][col].checked_rect.setFillColor(
+                utils::Settings::get_checked_color());
+
             this->slots[row][col].status = EMPTY;
 
             this->slots[row][col].circle_highlight.setFillColor(
@@ -225,6 +229,11 @@ void Chessboard::_draw_board() {
         for (int j = 0; j < BOARD_HEIGHT; ++j) {
             // Draw the slot rectangle
             this->window.draw(this->slots[i][j].rect);
+
+            // Check the king slot if a check is detected
+            if (this->slots[i][j].is_checked()) {
+                this->window.draw(this->slots[i][j].checked_rect);
+            }
 
             // Draw the circle highlight if the slot is highlighted
             if (this->slots[i][j].status == HIGHLIGHTED) {
@@ -383,5 +392,11 @@ void Chessboard::_on_highlighted_slot_clicked(
             this->user_black :
             this->user_white);
 
-    // TODO: check if the next user is checked / checkmated or not
+    // TODO: check if the next user is checkmated / stalemated or not
+    if (this->current_user->is_checked(this->slots)) {
+        this->current_user->check_king_slot(true, this->slots);
+    }
+    else {
+        this->current_user->check_king_slot(false, this->slots);
+    }
 }

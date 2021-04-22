@@ -26,14 +26,22 @@ class ChessPiece;
  * @brief Structure representing a slot of the chessboard
  * 
  */
-struct BoardSlot {
+class BoardSlot {
+public:
     sf::RectangleShape rect;
+    sf::RectangleShape checked_rect;
     sf::CircleShape circle_highlight;
 
     std::shared_ptr<ChessPiece> piece;
     BoardStatus status;
 
+    bool is_checked() const;
+
     void highlight(bool highlight_slot);
+    void check(bool check);
+
+private:
+    bool checked = false;
 };
 
 // Definition of the BoardSlots type

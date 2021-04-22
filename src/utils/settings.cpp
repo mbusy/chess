@@ -5,6 +5,7 @@ namespace utils {
 sf::Color Settings::dark_square_color = sf::Color(125, 135, 150);
 sf::Color Settings::light_square_color = sf::Color(232, 235, 239);
 sf::Color Settings::highlighted_color = sf::Color(50, 50, 50, 60);
+sf::Color Settings::checked_color = sf::Color(255, 0, 0, 120);
 
 float Settings::empty_highlight_scale = 0.3;
 float Settings::occupied_highlight_scale = 0.7;
@@ -24,6 +25,10 @@ sf::Color Settings::get_light_square_color() {
 
 sf::Color Settings::get_highlighted_color() {
     return Settings::highlighted_color;
+}
+
+sf::Color Settings::get_checked_color() {
+    return Settings::checked_color;
 }
 
 float Settings::get_empty_highlight_scale() {

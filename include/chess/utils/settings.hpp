@@ -10,6 +10,7 @@ public:
     static sf::Color get_dark_square_color();
     static sf::Color get_light_square_color();
     static sf::Color get_highlighted_color();
+    static sf::Color get_checked_color();
     
     static float get_empty_highlight_scale();
     static float get_occupied_highlight_scale();
@@ -31,6 +32,7 @@ private:
     static sf::Color dark_square_color;
     static sf::Color light_square_color;
     static sf::Color highlighted_color;
+    static sf::Color checked_color;
 
     static float empty_highlight_scale;
     static float occupied_highlight_scale;

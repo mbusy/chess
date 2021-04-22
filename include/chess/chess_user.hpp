@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include "chess/board_slot.hpp"
+#include "chess/utils/helpers.hpp"
 
 
 class ChessUser {
@@ -21,6 +22,8 @@ public:
 
     bool is_checked(const BoardSlots& slots);
     bool has_legal_moves(const BoardSlots& slots);
+
+    void check_king_slot(bool check, BoardSlots& slots);
 
 private:
     int score;

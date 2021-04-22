@@ -34,6 +34,7 @@ public:
     PieceDirection get_piece_direction() const;
     PieceId get_piece_id() const;
     sf::Sprite& get_sprite();
+    sf::Vector2i get_board_index() const;
 
 protected:
     static std::map<PieceId, std::map<PieceType, sf::Texture>> texture_map;

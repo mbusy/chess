@@ -88,14 +88,10 @@ void Chessboard::reset() {
 void Chessboard::_initialize_board() {
     bool white = true;
     
-    // Compute the size of a chess cell
-    this->cell_size = std::min(
-        this->window.getSize().x,
-        this->window.getSize().y) / 8;
+    // Specifies the size of a chess cell
+    utils::Settings::update_cell_size(this->window.getSize());
+    auto cell_size = utils::Settings::get_cell_size();
     
-    int offsetx = (this->window.getSize().x - (this->cell_size * 8)) / 2;
-    int offsety = (this->window.getSize().y - (this->cell_size * 8)) / 2;
-
     this->slots.clear();
     this->slots.resize(BOARD_WIDTH);
 
@@ -103,17 +99,15 @@ void Chessboard::_initialize_board() {
         this->slots[row].resize(BOARD_WIDTH);
 
         for (int col = 0; col < BOARD_WIDTH; ++col) {
-            this->slots[row][col].rect.setSize(sf::Vector2f(
-                this->cell_size,
-                this->cell_size));
+            this->slots[row][col].rect.setSize(
+                sf::Vector2f(cell_size, cell_size));
             
             this->slots[row][col].rect.setFillColor(white ?
                 utils::Settings::get_light_square_color() :
                 utils::Settings::get_dark_square_color());
             
             this->slots[row][col].rect.setPosition(
-                offsetx + col * this->cell_size,
-                offsety + row * this->cell_size);
+                utils::Settings::to_drawing_position(row, col));
             
             this->slots[row][col].status = EMPTY;
 
@@ -122,16 +116,15 @@ void Chessboard::_initialize_board() {
             this->slots[row][col].circle_highlight.setOutlineColor(
                 utils::Settings::get_highlighted_color());
             
-            this->slots[row][col].circle_highlight.setRadius(
-                this->cell_size / 2.0);
-
+            this->slots[row][col].circle_highlight.setRadius(cell_size / 2.0);
             this->slots[row][col].circle_highlight.setOrigin(
-                this->cell_size / 2.0,
-                this->cell_size / 2.0);
+                cell_size / 2.0,
+                cell_size / 2.0);
 
+            auto position = utils::Settings::to_drawing_position(row, col);
             this->slots[row][col].circle_highlight.setPosition(
-                offsetx + col * this->cell_size + cell_size / 2.0,
-                offsety + row * this->cell_size + cell_size / 2.0);
+                position.x + cell_size / 2.0,
+                position.y + cell_size / 2.0);
 
             white = !white;
         }
@@ -154,6 +147,7 @@ void Chessboard::_populate_board() {
     float piece_scale_x;
     float piece_scale_y;
 
+    auto cell_size = utils::Settings::get_cell_size();
     std::vector<std::shared_ptr<ChessPiece>> pieces = {
         std::make_shared<Rook>(Rook(PieceId::BLACK)),
         std::make_shared<Knight>(Knight(PieceId::BLACK)),
@@ -193,8 +187,8 @@ void Chessboard::_populate_board() {
 
             this->slots[row][col].status = OCCUPIED;
             sprite = this->slots[row][col].piece->get_sprite();
-            piece_scale_x = this->cell_size / sprite.getTexture()->getSize().x;
-            piece_scale_y = this->cell_size / sprite.getTexture()->getSize().y;
+            piece_scale_x = cell_size / sprite.getTexture()->getSize().x;
+            piece_scale_y = cell_size / sprite.getTexture()->getSize().y;
 
             this->slots[row][col].piece->get_sprite().setScale(
                 piece_scale_x,
@@ -303,16 +297,18 @@ void Chessboard::_clear_highlighted_slots() {
  * @param position 
  */
 void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
+    auto cell_size = utils::Settings::get_cell_size();
+
     // Check that the position is in the window
-    if ((position.x < 0 || position.x > 8 * this->cell_size) ||
-            (position.y < 0 || position.y > 8 * this->cell_size)) {
+    if ((position.x < 0 || position.x > 8 * cell_size) ||
+            (position.y < 0 || position.y > 8 * cell_size)) {
         
         return;
     }
 
     sf::Vector2i cell_position(
-        position.y / this->cell_size,
-        position.x / this->cell_size);
+        position.y / cell_size,
+        position.x / cell_size);
 
     switch (this->slots[cell_position.x][cell_position.y].status) {
         case HIGHLIGHTED:
@@ -370,4 +366,6 @@ void Chessboard::_on_highlighted_slot_clicked(
         this->current_user->get_id() == WHITE ?
             this->user_black :
             this->user_white);
+    
+    // TODO: check if the next user is checked / checkmated or not
 }

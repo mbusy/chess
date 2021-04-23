@@ -10,7 +10,12 @@ std::map<ChessSound, sf::SoundBuffer> AudioPlayer::buffer_map;
  * 
  */
 void AudioPlayer::load_sounds() {
-    std::vector<ChessSound> sounds = {MOVE, CAPTURE};
+    std::vector<ChessSound> sounds = {
+        MOVE,
+        CAPTURE,
+        CHECK,
+        CHECKMATE, 
+        STALEMATE};
 
     for (auto sound : sounds) {
         if (AudioPlayer::buffer_map.find(sound) ==

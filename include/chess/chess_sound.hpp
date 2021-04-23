@@ -8,7 +8,10 @@
  */
 enum ChessSound {
     MOVE,
-    CAPTURE
+    CAPTURE,
+    CHECK,
+    CHECKMATE,
+    STALEMATE
 };
 
 

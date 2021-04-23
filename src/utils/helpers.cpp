@@ -58,6 +58,18 @@ std::string get_sound_filepath(ChessSound sound_id) {
         case ChessSound::CAPTURE:
             filepath += "capture";
             break;
+        
+        case ChessSound::CHECK:
+            filepath += "check";
+            break;
+        
+        case ChessSound::CHECKMATE:
+            filepath += "checkmate";
+            break;
+        
+        case ChessSound::STALEMATE:
+            filepath += "stalemate";
+            break;
     }
 
     filepath += ".ogg";

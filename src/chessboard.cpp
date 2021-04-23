@@ -1,5 +1,5 @@
 #include "chess/chessboard.hpp"
-
+#include <iostream>
 
 /**
  * @brief Construct a new Chessboard:: Chessboard object
@@ -77,8 +77,6 @@ void Chessboard::reset() {
 
     this->user_black.clear_pieces();
     this->user_white.clear_pieces();
-    
-    this->current_user = std::make_shared<ChessUser>(this->user_white);
 
     this->_initialize_board();
     this->_populate_board();
@@ -218,6 +216,9 @@ void Chessboard::_populate_board() {
             }
         }
     }
+
+    // Set the current user to the white user
+    this->current_user = std::make_shared<ChessUser>(this->user_white);
 }
 
 /**
@@ -268,7 +269,7 @@ void Chessboard::_move_piece(
     // Capture the destination piece if it exists
     if (destination_slot.piece.get() != nullptr) {
         this->_capture_piece(destination_slot);
-        utils::AudioPlayer::play_sound(CAPTURE);    
+        utils::AudioPlayer::play_sound(CAPTURE);
     }
     else {
         utils::AudioPlayer::play_sound(MOVE);
@@ -379,24 +380,42 @@ void Chessboard::_on_occupied_slot_clicked(
  */
 void Chessboard::_on_highlighted_slot_clicked(
         const sf::Vector2i& position) {
+    
+    // Remove any potiential checks for the current user before the end of the
+    // turn
+    this->current_user->check_king_slot(false, this->slots);
 
     this->_move_piece(
         this->slots[this->selected_position.x][this->selected_position.y],
         this->slots[position.x][position.y]);
 
     this->_clear_highlighted_slots();
-    
+
     // Change the current user
     this->current_user = std::make_shared<ChessUser>(
         this->current_user->get_id() == WHITE ?
             this->user_black :
             this->user_white);
 
-    // TODO: check if the next user is checkmated / stalemated or not
+    // TODO: Better handling of the result display
+    auto has_moves = this->current_user->has_legal_moves(this->slots);
+    std::string player = this->current_user->get_id() == WHITE ? "Black" : "White";
+
     if (this->current_user->is_checked(this->slots)) {
         this->current_user->check_king_slot(true, this->slots);
+        utils::AudioPlayer::play_sound(CHECK);
+
+        if (!has_moves) {
+            utils::AudioPlayer::play_sound(CHECKMATE);
+            std::cout << player << " wins!" << std::endl;            
+        }
     }
     else {
         this->current_user->check_king_slot(false, this->slots);
+
+        if (!has_moves) {
+            utils::AudioPlayer::play_sound(STALEMATE);
+            std::cout << "Stalemate" << std::endl;
+        }
     }
 }

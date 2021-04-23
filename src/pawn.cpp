@@ -19,14 +19,6 @@ void Pawn::draw(sf::RenderWindow& window) const {
     window.draw(this->sprite);
 }
 
-void Pawn::show_possible_moves(BoardSlots& slots) const {
-    std::vector<sf::Vector2i> positions = this->compute_possible_moves(slots);
-
-    for (auto position : positions) {
-        slots[position.x][position.y].highlight(true);
-    }
-}
-
 std::vector<sf::Vector2i> Pawn::compute_possible_moves(
         const BoardSlots& slots) const {
     

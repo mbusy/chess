@@ -250,6 +250,20 @@ void Chessboard::_draw_board() {
 }
 
 /**
+ * @brief Shows the possible moves for a piece, highlighting the corresponding
+ * slots
+ * 
+ * @param positions 
+ */
+void Chessboard::_show_possible_moves(
+        const std::vector<sf::Vector2i>& positions) {
+
+    for (auto position : positions) {
+        this->slots[position.x][position.y].highlight(true);
+    }
+}
+
+/**
  * @brief Moves a piece on the board
  * 
  * @param origin 
@@ -369,8 +383,31 @@ void Chessboard::_on_occupied_slot_clicked(
     }
 
     this->selected_position = sf::Vector2i(position.x, position.y);
-    this->slots[position.x][position.y].piece->show_possible_moves(
+
+    // Filter the possible moves based on the checks    
+    BoardSlots slots_copy;
+    std::vector<sf::Vector2i> filtered_moves;
+    std::vector<sf::Vector2i> moves =
+        this->slots[position.x][position.y].piece->compute_possible_moves(
         this->slots);
+
+    for (auto move : moves) {
+        slots_copy = this->slots;
+
+        slots_copy[move.x][move.y].piece = nullptr;
+
+        slots_copy[move.x][move.y].piece = std::move(
+            slots_copy[position.x][position.y].piece);
+    
+        slots_copy[position.x][position.y].status = EMPTY;
+        slots_copy[move.x][move.y].status = OCCUPIED;
+
+        if (!this->current_user->is_checked(slots_copy)) {
+            filtered_moves.push_back(move);
+        }
+    }
+
+    this->_show_possible_moves(filtered_moves);
 }
 
 /**
@@ -396,7 +433,7 @@ void Chessboard::_on_highlighted_slot_clicked(
         this->current_user->get_id() == WHITE ?
             this->user_black :
             this->user_white);
-
+        
     // TODO: Better handling of the result display
     auto has_moves = this->current_user->has_legal_moves(this->slots);
     std::string player = this->current_user->get_id() == WHITE ? "Black" : "White";

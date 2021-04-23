@@ -1,5 +1,5 @@
 #include "chess/chess_user.hpp"
-
+#include <iostream>
 
 /**
  * @brief Construct a new Chess User:: Chess User object
@@ -73,116 +73,25 @@ void ChessUser::clear_pieces() {
  * @return false 
  */
 bool ChessUser::is_checked(const BoardSlots& slots) {
-    if (auto king = this->pieces[KING].at(0).lock()) {
-        return this->_is_position_checked(king->get_position(), slots);
-    }
-    else {
-        throw std::runtime_error("No king found for the user");
-    }
-}
+    // Find the position of the king in the slots
+    sf::Vector2i position(-1, -1);
 
-/**
- * @brief Check if the user has legal moves left. The method makes the
- * assumption that the user is already checked, so this method should only be
- * used when the user is checked
- * 
- * @param slots 
- * @return true 
- * @return false 
- */
-bool ChessUser::has_legal_moves(const BoardSlots& slots) {
-    std::vector<sf::Vector2i> possible_moves;
-    sf::Vector2i position;
-    BoardSlots slots_copy;
-    std::shared_ptr<ChessPiece> king = nullptr;
-
-    for (const auto& element : this->pieces) {
-        for (const auto& piece_ptr : element.second) {
-            if (piece_ptr.expired()) {
+    for (int i = 0; i < slots.size(); ++i) {
+        for (int j = 0; j < slots[i].size(); ++j) {
+            if (slots[i][j].status == EMPTY) {
                 continue;
             }
-
-            auto piece = piece_ptr.lock();
-
-            // King moves won't be studied in this loop
-            if (piece->get_piece_type() == KING) {
-                king = piece; 
-                continue;
-            }
-
-            position = piece->get_position();
-            possible_moves = piece->compute_possible_moves(slots);
-
-
-            for (const auto& move : possible_moves) {
-                slots_copy = slots;
-                slots_copy[move.x][move.y].piece = std::move(
-                    slots_copy[position.x][position.y].piece);
-
-                slots_copy[position.x][position.y].status = EMPTY;
-                slots_copy[move.x][move.y].status = OCCUPIED;
-
-                if (!this->is_checked(slots_copy)) {
-                    return true;
-                }
+            else if (slots[i][j].piece->get_piece_type() == KING &&
+                    slots[i][j].piece->get_piece_id() == this->user_id) {
+                position = sf::Vector2i(i, j);
             }
         }
     }
 
-    if (king == nullptr) {
+    if (position.x == -1 || position.y == -1) {
         throw std::runtime_error("No king found for the user");
     }
 
-    position = king->get_position();
-    possible_moves = king->compute_possible_moves(slots);
-
-    for (const auto& move : possible_moves) {
-        slots_copy = slots;
-
-        slots_copy[move.x][move.y].piece = std::move(
-                    slots_copy[position.x][position.y].piece);
-
-        slots_copy[position.x][position.y].status = EMPTY;
-        slots_copy[move.x][move.y].status = OCCUPIED;
-
-        if (!this->_is_position_checked(move, slots_copy)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/**
- * @brief Check / uncheck the slot holding the king piece of the user
- * 
- * @param check 
- * @param slots 
- */
-void ChessUser::check_king_slot(bool check, BoardSlots& slots) {
-    if (auto king = this->pieces[KING].at(0).lock()) {
-        auto position = king->get_position();
-        slots[position.x][position.y].check(check);
-    }
-    else {
-        throw std::runtime_error("No king found for the user");
-    }
-}
-
-/**
- * @brief Scan for checks in a hypothetical board configuration. The specified
- * position is the hypothetical position of the king, and the slots the
- * hypothetical board
- * 
- * @param position 
- * @param slots 
- * @return true 
- * @return false 
- */
-bool ChessUser::_is_position_checked(
-        const sf::Vector2i& position,
-        const BoardSlots& slots) {
-        
     // Check for checks made by the bishops, rooks or the queen
     std::vector<std::vector<sf::Vector2i>> offsets = {
         {sf::Vector2i(-1, -1),
@@ -257,12 +166,14 @@ bool ChessUser::_is_position_checked(
     }
 
     // Check for checks made by pawns
-    float offset_y = this->user_id == WHITE ? -1 : 1;
-    std::vector<sf::Vector2i> candidates = {
-        sf::Vector2i(-1, offset_y),
-        sf::Vector2i(1, offset_y)};
+    float offset_x = this->user_id == WHITE ? -1 : 1;
+    std::vector<sf::Vector2i> king_offsets = {
+        sf::Vector2i(offset_x, -1),
+        sf::Vector2i(offset_x, 1)};
 
-    for (auto candidate : candidates) {
+    for (auto offset : king_offsets) {
+        auto candidate = position + offset;
+
         if (!utils::helpers::is_position_on_board(candidate)) {
             continue;
         }
@@ -271,6 +182,7 @@ bool ChessUser::_is_position_checked(
 
         if (slot.piece->get_piece_id() != this->user_id &&
                 slot.piece->get_piece_type() == PAWN) {
+            std::cout << "CHECK FOUND" << std::endl;
             return true;
         }
     }
@@ -290,7 +202,7 @@ bool ChessUser::_is_position_checked(
             if (slot.status == OCCUPIED) {
                 if (slot.piece->get_piece_id() != this->user_id &&
                         slot.piece->get_piece_type() == KING) {
-
+                    
                     return true;
                 }
             }
@@ -298,4 +210,92 @@ bool ChessUser::_is_position_checked(
     }
 
     return false;
+}
+
+/**
+ * @brief Check if the user has legal moves left. The method makes the
+ * assumption that the user is already checked, so this method should only be
+ * used when the user is checked
+ * 
+ * @param slots 
+ * @return true 
+ * @return false 
+ */
+bool ChessUser::has_legal_moves(const BoardSlots& slots) {
+    std::vector<sf::Vector2i> possible_moves;
+    sf::Vector2i position;
+    BoardSlots slots_copy;
+    std::shared_ptr<ChessPiece> king = nullptr;
+
+    for (const auto& element : this->pieces) {
+        for (const auto& piece_ptr : element.second) {
+            if (piece_ptr.expired()) {
+                continue;
+            }
+
+            auto piece = piece_ptr.lock();
+
+            // King moves won't be studied in this loop
+            if (piece->get_piece_type() == KING) {
+                king = piece; 
+                continue;
+            }
+
+            position = piece->get_position();
+            possible_moves = piece->compute_possible_moves(slots);
+
+
+            for (const auto& move : possible_moves) {
+                slots_copy = slots;
+                slots_copy[move.x][move.y].piece = std::move(
+                    slots_copy[position.x][position.y].piece);
+
+                slots_copy[position.x][position.y].status = EMPTY;
+                slots_copy[move.x][move.y].status = OCCUPIED;
+
+                if (!this->is_checked(slots_copy)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    if (king == nullptr) {
+        throw std::runtime_error("No king found for the user");
+    }
+
+    position = king->get_position();
+    possible_moves = king->compute_possible_moves(slots);
+
+    for (const auto& move : possible_moves) {
+        slots_copy = slots;
+
+        slots_copy[move.x][move.y].piece = std::move(
+                    slots_copy[position.x][position.y].piece);
+
+        slots_copy[position.x][position.y].status = EMPTY;
+        slots_copy[move.x][move.y].status = OCCUPIED;
+
+        if (!this->is_checked(slots_copy)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @brief Check / uncheck the slot holding the king piece of the user
+ * 
+ * @param check 
+ * @param slots 
+ */
+void ChessUser::check_king_slot(bool check, BoardSlots& slots) {
+    if (auto king = this->pieces[KING].at(0).lock()) {
+        auto position = king->get_position();
+        slots[position.x][position.y].check(check);
+    }
+    else {
+        throw std::runtime_error("No king found for the user");
+    }
 }

@@ -48,6 +48,8 @@ private:
     void _populate_board();
     void _draw_board();
 
+    void _show_possible_moves(const std::vector<sf::Vector2i>& positions);
+
     void _move_piece(
         BoardSlot& origin_slot,
         BoardSlot& destination_slot);

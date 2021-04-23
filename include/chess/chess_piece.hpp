@@ -22,8 +22,6 @@ public:
     virtual int get_value() const = 0;
     virtual void draw(sf::RenderWindow& window) const = 0;
 
-    virtual void show_possible_moves(BoardSlots& slots) const = 0;
-
     virtual std::vector<sf::Vector2i> compute_possible_moves(
         const BoardSlots& slots) const = 0;
 

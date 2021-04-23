@@ -30,10 +30,6 @@ private:
     int score;
     PieceId user_id;
     std::unordered_map<PieceType, std::vector<std::weak_ptr<ChessPiece>>> pieces;
-
-    bool _is_position_checked(
-        const sf::Vector2i& position,
-        const BoardSlots& slots);
 };
 
 #endif // USER_H

@@ -41,12 +41,9 @@ std::vector<sf::Vector2i> Bishop::compute_possible_moves(
         auto candidate = position + offset;
 
         while (true) {
+            
             // Check that the position is still on the board
-            if (candidate.x > 7 ||
-                    candidate.x < 0 ||
-                    candidate.y > 7 ||
-                    candidate.y < 0) {
-                
+            if (!utils::helpers::is_position_on_board(candidate)) {
                 break;
             }
 

@@ -20,7 +20,7 @@ sf::Sprite& ChessPiece::get_sprite() {
 }
 
 sf::Vector2i ChessPiece::get_position() const {
-    return utils::Settings::to_board_index(this->sprite.getPosition());
+    return utils::helpers::to_board_index(this->sprite.getPosition());
 }
 
 void ChessPiece::_load_texture() {
@@ -31,7 +31,7 @@ void ChessPiece::_load_texture() {
             ChessPiece::texture_map[this->piece_id].end()) {
         
         ChessPiece::texture_map[this->piece_id][this->piece_type].loadFromFile(
-            utils::get_piece_filepath(this->piece_id, this->piece_type));
+            utils::helpers::get_piece_filepath(this->piece_id, this->piece_type));
     }
     
     // Apply the texture to the sprite

@@ -22,8 +22,8 @@ set(SOURCES
     ${SRC_DIRECTORY}/queen.cpp
     ${SRC_DIRECTORY}/rook.cpp
     ${SRC_DIRECTORY}/utils/audio_player.cpp
-    ${SRC_DIRECTORY}/utils/resource_loader.cpp
     ${SRC_DIRECTORY}/utils/settings.cpp
+    ${SRC_DIRECTORY}/utils/helpers.cpp
 )
 
 include_directories(${INCLUDE_DIRECTORY})

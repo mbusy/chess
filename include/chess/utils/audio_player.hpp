@@ -4,7 +4,7 @@
 #include <map>
 #include <SFML/Audio.hpp>
 #include "chess/chess_sound.hpp"
-#include "chess/utils/resource_loader.hpp"
+#include "chess/utils/helpers.hpp"
 
 namespace utils {
 

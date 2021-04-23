@@ -5,6 +5,7 @@ namespace utils {
 sf::Color Settings::dark_square_color = sf::Color(125, 135, 150);
 sf::Color Settings::light_square_color = sf::Color(232, 235, 239);
 sf::Color Settings::highlighted_color = sf::Color(50, 50, 50, 60);
+sf::Color Settings::checked_color = sf::Color(255, 0, 0, 120);
 
 float Settings::empty_highlight_scale = 0.3;
 float Settings::occupied_highlight_scale = 0.7;
@@ -26,6 +27,10 @@ sf::Color Settings::get_highlighted_color() {
     return Settings::highlighted_color;
 }
 
+sf::Color Settings::get_checked_color() {
+    return Settings::checked_color;
+}
+
 float Settings::get_empty_highlight_scale() {
     return Settings::empty_highlight_scale;
 }
@@ -45,6 +50,10 @@ float Settings::get_cell_size() {
     }
 
     return Settings::cell_size;
+}
+
+sf::Vector2i Settings::get_cell_offset() {
+    return Settings::cell_offset;
 }
 
 void Settings::set_dark_square_color(const sf::Color& color) {
@@ -79,26 +88,6 @@ void Settings::update_cell_size(const sf::Vector2u& window_size) {
     Settings::cell_size = std::min(window_size.x, window_size.y) / 8;
     Settings::cell_offset.x = (window_size.x - Settings::cell_size * 8) / 2;
     Settings::cell_offset.y = (window_size.y - Settings::cell_size * 8) / 2;
-}
-
-sf::Vector2f Settings::to_drawing_position(int x, int y) {
-    return Settings::to_drawing_position(sf::Vector2i(x, y));
-}
-
-sf::Vector2f Settings::to_drawing_position(const sf::Vector2i& index) {
-    return sf::Vector2f(
-        Settings::cell_offset.x + index.y * Settings::cell_size,
-        Settings::cell_offset.y + index.x * Settings::cell_size);
-}
-
-sf::Vector2i Settings::to_board_index(float x, float y) {
-    return Settings::to_board_index(sf::Vector2f(x, y));
-}
-
-sf::Vector2i Settings::to_board_index(const sf::Vector2f& position) {
-    return sf::Vector2i(
-        (position.y - Settings::cell_offset.y) / Settings::cell_size,
-        (position.x - Settings::cell_offset.x) / Settings::cell_size);
 }
 
 }

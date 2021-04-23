@@ -1,5 +1,10 @@
 #include "chess/board_slot.hpp"
 
+
+bool BoardSlot::is_checked() const {
+    return this->checked;
+}
+
 void BoardSlot::highlight(bool highlight_slot) {
     if (highlight_slot) {
         this->status = HIGHLIGHTED;
@@ -27,4 +32,8 @@ void BoardSlot::highlight(bool highlight_slot) {
     else {
         this->status = this->piece == nullptr ? EMPTY : OCCUPIED;
     }
+}
+
+void BoardSlot::check(bool check) {
+    this->checked = check;
 }

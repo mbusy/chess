@@ -33,6 +33,8 @@ public:
 
     sf::Vector2i get_position() const;
 
+    void signal_piece_moved();
+
 protected:
     static std::map<PieceId, std::map<PieceType, sf::Texture>> texture_map;
 
@@ -40,6 +42,7 @@ protected:
     PieceDirection piece_direction;
     PieceId piece_id;
     sf::Sprite sprite;
+    bool has_moved = false;
     
     void _load_texture();
 };

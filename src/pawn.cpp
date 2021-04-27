@@ -35,7 +35,7 @@ std::vector<ChessMove> Pawn::compute_possible_moves(
     ChessMove pawn_move;
 
     if ((this->piece_id == WHITE && new_x == 0) ||
-            (this->piece_id == BLACK && new_x == 6)) {
+            (this->piece_id == BLACK && new_x == 7)) {
         
         pawn_move.type = ChessMove::Type::PROMOTION;
     }

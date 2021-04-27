@@ -6,6 +6,7 @@ const int King::piece_value;
 King::King(PieceId piece_id) {
     this->piece_id = piece_id;
     this->piece_type = KING;
+    this->has_moved = false;
 
     this->_load_texture();
 }
@@ -31,13 +32,12 @@ std::vector<ChessMove> King::compute_possible_moves(
                 continue;
             }
             // Check that the position is on the board
-            else if ((i < 0 || i > 7) || (j < 0 || j > 7)) {
+            else if (!utils::helpers::is_position_on_board(i, j)) {
                 continue;
             }
 
             auto slot = slots[i][j];
 
-            // TODO: check for checks to prevent illegal moves
             if (slot.status == OCCUPIED &&
                     slot.piece->get_piece_id() == this->piece_id) {
                 continue;
@@ -47,6 +47,13 @@ std::vector<ChessMove> King::compute_possible_moves(
             }
         }
     }
+
+    // Check for short and long castles
+    // if (!this->has_moved) {
+    //     sf::Vector2i short_offset(0, 1);
+        
+    //     for ()
+    // }
 
     return possible_moves;
 }

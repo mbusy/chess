@@ -485,6 +485,7 @@ void Chessboard::_on_occupied_slot_clicked(
         this->slots[position.x][position.y].piece->compute_possible_moves(
         this->slots);
 
+    // TODO handle short and long castles
     for (auto move : moves) {
         slots_copy = this->slots;
 

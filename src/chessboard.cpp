@@ -398,7 +398,7 @@ void Chessboard::_on_occupied_slot_clicked(
 
         slots_copy[move.x][move.y].piece = std::move(
             slots_copy[position.x][position.y].piece);
-    
+
         slots_copy[position.x][position.y].status = EMPTY;
         slots_copy[move.x][move.y].status = OCCUPIED;
 

@@ -76,13 +76,17 @@ std::string get_sound_filepath(ChessSound sound_id) {
     return filepath;
 }
 
-bool is_position_on_board(const sf::Vector2i& position) {
-    if (position.x > 7 || position.x < 0 || position.y > 7 || position.y < 0) {
+bool is_position_on_board(int x, int y) {
+    if (x > 7 || x < 0 || y > 7 || y < 0) {
         return false;
     }
     else {
         return true;
     }
+}
+
+bool is_position_on_board(const sf::Vector2i& position) {
+    is_position_on_board(position.x, position.y);
 }
 
 sf::Vector2f to_drawing_position(int x, int y) {

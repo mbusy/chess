@@ -14,6 +14,7 @@ std::string get_piece_filepath(PieceId id, PieceType type);
 std::string get_sound_filepath(ChessSound sound_id);
 
 
+bool is_position_on_board(int x, int y);
 bool is_position_on_board(const sf::Vector2i& position);
 sf::Vector2f to_drawing_position(int x, int y);
 sf::Vector2f to_drawing_position(const sf::Vector2i& index);

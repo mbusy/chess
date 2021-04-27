@@ -167,11 +167,11 @@ bool ChessUser::is_checked(const BoardSlots& slots) {
 
     // Check for checks made by pawns
     float offset_x = this->user_id == WHITE ? -1 : 1;
-    std::vector<sf::Vector2i> king_offsets = {
+    std::vector<sf::Vector2i> pawn_offsets = {
         sf::Vector2i(offset_x, -1),
         sf::Vector2i(offset_x, 1)};
 
-    for (auto offset : king_offsets) {
+    for (auto offset : pawn_offsets) {
         auto candidate = position + offset;
 
         if (!utils::helpers::is_position_on_board(candidate)) {
@@ -180,10 +180,11 @@ bool ChessUser::is_checked(const BoardSlots& slots) {
 
         auto slot = slots[candidate.x][candidate.y];
 
-        if (slot.piece->get_piece_id() != this->user_id &&
-                slot.piece->get_piece_type() == PAWN) {
-            std::cout << "CHECK FOUND" << std::endl;
-            return true;
+        if (slot.status == OCCUPIED) {
+            if (slot.piece->get_piece_id() != this->user_id &&
+                    slot.piece->get_piece_type() == PAWN) {
+                return true;
+            }
         }
     }
 
@@ -192,8 +193,9 @@ bool ChessUser::is_checked(const BoardSlots& slots) {
         for (int j = -1; j <= 1; ++j) {
             auto candidate = position + sf::Vector2i(i, j);
 
-            if (i == j == 0 ||
+            if ((i == 0 && j == 0) ||
                     !utils::helpers::is_position_on_board(candidate)) {
+
                 continue;
             }
 

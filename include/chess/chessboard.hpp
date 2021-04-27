@@ -40,6 +40,7 @@ private:
     sf::RenderWindow& window;
     BoardSlots slots;
     sf::Vector2i selected_position;
+    std::vector<ChessMove> possible_moves;
     ChessUser user_white;
     ChessUser user_black;
     std::shared_ptr<ChessUser> current_user;
@@ -48,13 +49,14 @@ private:
     void _populate_board();
     void _draw_board();
 
-    void _show_possible_moves(const std::vector<sf::Vector2i>& positions);
+    void _show_possible_moves(const std::vector<ChessMove>& positions);
 
     void _move_piece(
         BoardSlot& origin_slot,
         BoardSlot& destination_slot);
     
     void _capture_piece(BoardSlot& slot);
+    void _promote_piece(BoardSlot& slot);
     void _clear_highlighted_slots();
 
     void _on_mouse_clicked(const sf::Vector2i& position);

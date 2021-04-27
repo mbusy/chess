@@ -11,7 +11,7 @@ public:
     int get_value() const;
     void draw(sf::RenderWindow& window) const;
     
-    std::vector<sf::Vector2i> compute_possible_moves(
+    std::vector<ChessMove> compute_possible_moves(
         const BoardSlots& slots) const;
 
 private:

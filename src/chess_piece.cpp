@@ -37,4 +37,15 @@ void ChessPiece::_load_texture() {
     // Apply the texture to the sprite
     this->sprite.setTexture(
         ChessPiece::texture_map[this->piece_id][this->piece_type]);
+    
+    // Automatically resizes the sprite
+    float piece_scale_x = utils::Settings::get_cell_size() /
+        this->sprite.getTexture()->getSize().x;
+
+    float piece_scale_y = utils::Settings::get_cell_size() /
+        this->sprite.getTexture()->getSize().y;
+
+    this->sprite.setScale(
+        piece_scale_x,
+        piece_scale_y);
 }

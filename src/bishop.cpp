@@ -18,11 +18,11 @@ void Bishop::draw(sf::RenderWindow& window) const {
     window.draw(this->sprite);
 }
 
-std::vector<sf::Vector2i> Bishop::compute_possible_moves(
+std::vector<ChessMove> Bishop::compute_possible_moves(
         const BoardSlots& slots) const {
     
     auto position = this->get_position();
-    std::vector<sf::Vector2i> possible_moves;
+    std::vector<ChessMove> possible_moves;
     std::vector<sf::Vector2i> offsets = {
         sf::Vector2i(-1, -1),
         sf::Vector2i(-1, 1),

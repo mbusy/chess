@@ -295,27 +295,45 @@ void Chessboard::_move_piece(
         utils::AudioPlayer::play_sound(MOVE);
     }
 
-    // Handle the possible special moves
+    // Handle pawn promotion, short castling and long castling
+    int row = this->current_user->get_id() == WHITE ? 7 : 0;
+
     switch (required_move.type) {
         case ChessMove::Type::PROMOTION:
             this->_promote_piece(origin_slot);
             break;
         
         case ChessMove::Type::LONG_CASTLE:
+            this->slots[row][3].piece = std::move(this->slots[row][0].piece);
+            this->slots[row][3].piece->get_sprite().setPosition(
+                this->slots[row][3].rect.getPosition());
+            
+            this->slots[row][3].piece->signal_piece_moved();
             break;
 
         case ChessMove::Type::SHORT_CASTLE:
+            this->slots[row][5].piece = std::move(this->slots[row][7].piece);
+            this->slots[row][5].piece->get_sprite().setPosition(
+                this->slots[row][5].rect.getPosition());
+            
+            this->slots[row][5].piece->signal_piece_moved();
             break;
         
         case ChessMove::Type::NONE:
             break;
     }
 
-    origin_slot.piece->get_sprite().setPosition(
+    // Move the piece pointer to the destination slot
+    destination_slot.piece = std::move(origin_slot.piece);
+
+    // Update the position of the piece
+    destination_slot.piece->get_sprite().setPosition(
         destination_slot.rect.getPosition());
 
-    destination_slot.piece = std::move(origin_slot.piece);
+    // Specify that the piece has moved
+    destination_slot.piece->signal_piece_moved();
     
+    // Update the status of the different slots
     origin_slot.status = EMPTY;
     destination_slot.status = OCCUPIED;
 }

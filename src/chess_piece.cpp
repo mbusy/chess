@@ -23,6 +23,10 @@ sf::Vector2i ChessPiece::get_position() const {
     return utils::helpers::to_board_index(this->sprite.getPosition());
 }
 
+bool ChessPiece::has_piece_moved() const {
+    return this->has_moved;
+}
+
 void ChessPiece::signal_piece_moved() {
     this->has_moved = true;
 }

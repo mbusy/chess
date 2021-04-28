@@ -22,13 +22,13 @@ void King::draw(sf::RenderWindow& window) const {
 std::vector<ChessMove> King::compute_possible_moves(
         const BoardSlots& slots) const {
     
-    auto position = this->get_position();
+    auto pos = this->get_position();
     std::vector<ChessMove> possible_moves;
 
-    for (int i = position.x - 1; i <= position.x + 1; ++i) {
-        for (int j = position.y - 1; j <= position.y + 1; ++j) {
+    for (int i = pos.x - 1; i <= pos.x + 1; ++i) {
+        for (int j = pos.y - 1; j <= pos.y + 1; ++j) {
             // Filter out the same position as before
-            if (i == position.x && j == position.y) {
+            if (i == pos.x && j == pos.y) {
                 continue;
             }
             // Check that the position is on the board
@@ -49,11 +49,30 @@ std::vector<ChessMove> King::compute_possible_moves(
     }
 
     // Check for short and long castles
-    // if (!this->has_moved) {
-    //     sf::Vector2i short_offset(0, 1);
-        
-    //     for ()
-    // }
+    if (!this->has_moved) {       
+        if (slots[pos.x][pos.y + 1].status == EMPTY &&
+                slots[pos.x][pos.y + 2].status == EMPTY &&
+                slots[pos.x][pos.y + 3].status == OCCUPIED &&
+                slots[pos.x][pos.y + 3].piece->get_piece_type() == ROOK &&
+                slots[pos.x][pos.y + 3].piece->has_piece_moved() == false) {
+            
+            possible_moves.push_back(ChessMove(
+                sf::Vector2i(pos.x, pos.y + 2),
+                ChessMove::Type::SHORT_CASTLE));
+        }
+
+        if (slots[pos.x][pos.y - 1].status == EMPTY &&
+                slots[pos.x][pos.y - 2].status == EMPTY &&
+                slots[pos.x][pos.y - 3].status == EMPTY &&
+                slots[pos.x][pos.y - 4].status == OCCUPIED &&
+                slots[pos.x][pos.y - 4].piece->get_piece_type() == ROOK &&
+                slots[pos.x][pos.y - 4].piece->has_piece_moved() == false) {
+            
+            possible_moves.push_back(ChessMove(
+                sf::Vector2i(pos.x, pos.y - 2),
+                ChessMove::Type::LONG_CASTLE));
+        }
+    }
 
     return possible_moves;
 }

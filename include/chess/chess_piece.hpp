@@ -30,8 +30,8 @@ public:
     PieceDirection get_piece_direction() const;
     PieceId get_piece_id() const;
     sf::Sprite& get_sprite();
-
     sf::Vector2i get_position() const;
+    bool has_piece_moved() const;
 
     void signal_piece_moved();
 

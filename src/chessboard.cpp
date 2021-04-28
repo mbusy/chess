@@ -49,15 +49,6 @@ void Chessboard::run() {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 this->_on_mouse_clicked(sf::Mouse::getPosition(this->window));
             }
-
-            /*
-            if (event.type == sf::Event::Resized) {
-                sf::View view = this->window.getView();
-                view.setCenter(event.size.width / 2, event.size.height / 2);
-                view.setSize(event.size.width, event.size.height);
-                this->window.setView(view);
-            }
-            */
         }
 
         this->window.clear(sf::Color(150, 150, 150));
@@ -503,8 +494,19 @@ void Chessboard::_on_occupied_slot_clicked(
         this->slots[position.x][position.y].piece->compute_possible_moves(
         this->slots);
 
-    // TODO handle short and long castles
+    int row = this->current_user->get_id() == WHITE ? 7 : 0;
+    bool short_castle_enabled = false;
+    bool long_castle_enabled = false;
+
     for (auto move : moves) {
+        if (move.type == ChessMove::Type::SHORT_CASTLE ||
+                move.type == ChessMove::Type::LONG_CASTLE) {
+            
+            if (this->current_user->is_checked(this->slots)) {
+                continue;
+            }
+        }
+
         slots_copy = this->slots;
 
         slots_copy[move.position.x][move.position.y].piece = nullptr;
@@ -516,6 +518,21 @@ void Chessboard::_on_occupied_slot_clicked(
         slots_copy[move.position.x][move.position.y].status = OCCUPIED;
 
         if (!this->current_user->is_checked(slots_copy)) {
+            if (move.position == sf::Vector2i(row, 5)) {
+                short_castle_enabled = true;
+            }
+            else if (move.position == sf::Vector2i(row, 3)) {
+                long_castle_enabled = true;
+            }
+            else if (move.type == ChessMove::Type::SHORT_CASTLE &&
+                    !short_castle_enabled) {
+                continue;
+            }
+            else if (move.type == ChessMove::Type::LONG_CASTLE &&
+                        !long_castle_enabled) {
+                continue;
+            }
+
             this->possible_moves.push_back(move);
         }
     }

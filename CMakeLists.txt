@@ -4,7 +4,8 @@ project(chess)
 set(CMAKE_CXX_STANDARD 11)
 
 # SFML lib
-set(SFML_DIR "/usr/local/lib/cmake/SFML/")
+# option(SFML_DIR "SFML_DIR" "/usr/local/lib/cmake/SFML/")
+
 find_package(SFML 2.5 COMPONENTS graphics audio window REQUIRED)
 
 set(SRC_DIRECTORY src)

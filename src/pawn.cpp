@@ -19,17 +19,25 @@ void Pawn::draw(sf::RenderWindow& window) const {
     window.draw(this->sprite);
 }
 
-std::vector<sf::Vector2i> Pawn::compute_possible_moves(
+std::vector<ChessMove> Pawn::compute_possible_moves(
         const BoardSlots& slots) const {
     
     auto position = this->get_position();
-    std::vector<sf::Vector2i> possible_moves;
+    std::vector<ChessMove> possible_moves;
 
     int new_x = position.x + this->piece_direction;
     int double_step_index = this->piece_id == WHITE ? 6 : 1;
 
     if (new_x > 7 || new_x < 0) {
         return possible_moves;
+    }
+
+    ChessMove pawn_move;
+
+    if ((this->piece_id == WHITE && new_x == 0) ||
+            (this->piece_id == BLACK && new_x == 7)) {
+        
+        pawn_move.type = ChessMove::Type::PROMOTION;
     }
 
     // Check the possible captures for the pawn
@@ -43,21 +51,23 @@ std::vector<sf::Vector2i> Pawn::compute_possible_moves(
         if (slot.status == OCCUPIED &&
                 slot.piece->get_piece_id() != this->piece_id) {
             
-            possible_moves.push_back(
-                sf::Vector2i(new_x, position.y + y_offset));
+            pawn_move.position = sf::Vector2i(new_x, position.y + y_offset);
+            possible_moves.push_back(pawn_move);
         }
     }
 
     // Check for a simple forward step
     if (slots[new_x][position.y].status == EMPTY) {
-        possible_moves.push_back(sf::Vector2i(new_x, position.y));
+        pawn_move.position = sf::Vector2i(new_x, position.y);
+        possible_moves.push_back(pawn_move);
     }
     else {
         return possible_moves;
     }
 
     // Check for a double forward step if the position of the pawn allows it,
-    // And if the path is clear
+    // and if the path is clear. No need to check for a special move if the
+    // pawn can perform this double step
     if (position.x == double_step_index && 
             new_x + this->piece_direction <= 7 &&
             new_x + this->piece_direction >= 0 &&

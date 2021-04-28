@@ -23,6 +23,14 @@ sf::Vector2i ChessPiece::get_position() const {
     return utils::helpers::to_board_index(this->sprite.getPosition());
 }
 
+bool ChessPiece::has_piece_moved() const {
+    return this->has_moved;
+}
+
+void ChessPiece::signal_piece_moved() {
+    this->has_moved = true;
+}
+
 void ChessPiece::_load_texture() {
     // If the texture hasn't already been loaded, load it
     if (ChessPiece::texture_map.find(this->piece_id) ==
@@ -37,4 +45,15 @@ void ChessPiece::_load_texture() {
     // Apply the texture to the sprite
     this->sprite.setTexture(
         ChessPiece::texture_map[this->piece_id][this->piece_type]);
+    
+    // Automatically resizes the sprite
+    float piece_scale_x = utils::Settings::get_cell_size() /
+        this->sprite.getTexture()->getSize().x;
+
+    float piece_scale_y = utils::Settings::get_cell_size() /
+        this->sprite.getTexture()->getSize().y;
+
+    this->sprite.setScale(
+        piece_scale_x,
+        piece_scale_y);
 }

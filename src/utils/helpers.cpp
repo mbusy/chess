@@ -76,6 +76,14 @@ std::string get_sound_filepath(ChessSound sound_id) {
     return filepath;
 }
 
+/**
+ * @brief Check if the index position is on the board
+ * 
+ * @param x 
+ * @param y 
+ * @return true 
+ * @return false 
+ */
 bool is_position_on_board(int x, int y) {
     if (x > 7 || x < 0 || y > 7 || y < 0) {
         return false;
@@ -85,8 +93,44 @@ bool is_position_on_board(int x, int y) {
     }
 }
 
+/**
+ * @brief Check if the index position is on the board
+ * 
+ * @param position 
+ * @return true 
+ * @return false 
+ */
 bool is_position_on_board(const sf::Vector2i& position) {
     is_position_on_board(position.x, position.y);
+}
+
+/**
+ * @brief Check if the index position is on the board
+ * 
+ * @param move 
+ * @return true 
+ * @return false 
+ */
+bool is_position_on_board(const ChessMove& move) {
+    is_position_on_board(move.position);
+}
+
+/**
+ * @brief Check if the specified position is on the window
+ * 
+ * @param position 
+ * @return true 
+ * @return false 
+ */
+bool is_position_on_window(const sf::Vector2i& position) {
+    if ((position.x < 0 || position.x > 8 * Settings::get_cell_size()) ||
+        (position.y < 0 || position.y > 8 * Settings::get_cell_size())) {
+    
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 sf::Vector2f to_drawing_position(int x, int y) {

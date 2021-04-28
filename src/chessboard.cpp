@@ -49,15 +49,6 @@ void Chessboard::run() {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 this->_on_mouse_clicked(sf::Mouse::getPosition(this->window));
             }
-
-            /*
-            if (event.type == sf::Event::Resized) {
-                sf::View view = this->window.getView();
-                view.setCenter(event.size.width / 2, event.size.height / 2);
-                view.setSize(event.size.width, event.size.height);
-                this->window.setView(view);
-            }
-            */
         }
 
         this->window.clear(sf::Color(150, 150, 150));
@@ -149,9 +140,6 @@ void Chessboard::_populate_board() {
     }
 
     sf::Sprite sprite;
-    float piece_scale_x;
-    float piece_scale_y;
-
     auto cell_size = utils::Settings::get_cell_size();
 
     std::vector<std::shared_ptr<ChessPiece>> pieces = {
@@ -192,13 +180,6 @@ void Chessboard::_populate_board() {
             }
 
             this->slots[row][col].status = OCCUPIED;
-            sprite = this->slots[row][col].piece->get_sprite();
-            piece_scale_x = cell_size / sprite.getTexture()->getSize().x;
-            piece_scale_y = cell_size / sprite.getTexture()->getSize().y;
-
-            this->slots[row][col].piece->get_sprite().setScale(
-                piece_scale_x,
-                piece_scale_y);
             
             this->slots[row][col].piece->get_sprite().setPosition(
                 this->slots[row][col].rect.getPosition());
@@ -253,13 +234,13 @@ void Chessboard::_draw_board() {
  * @brief Shows the possible moves for a piece, highlighting the corresponding
  * slots
  * 
- * @param positions 
+ * @param moves
  */
 void Chessboard::_show_possible_moves(
-        const std::vector<sf::Vector2i>& positions) {
+        const std::vector<ChessMove>& moves) {
 
-    for (auto position : positions) {
-        this->slots[position.x][position.y].highlight(true);
+    for (auto move : moves) {
+        this->slots[move.position.x][move.position.y].highlight(true);
     }
 }
 
@@ -280,6 +261,22 @@ void Chessboard::_move_piece(
         throw std::runtime_error("Cannot move an inexisting piece");
     }
 
+    // Check that the required move exists in the possible_moves vector
+    ChessMove required_move;
+    sf::Vector2i destination_index = utils::helpers::to_board_index(
+        destination_slot.rect.getPosition());
+
+    for (const auto& move : this->possible_moves) {
+        if (move.position == destination_index) {
+            required_move = move;
+            break;
+        }
+    }
+
+    if (required_move.position.x == -1 || required_move.position.y == -1) {
+        throw std::runtime_error("The required move does not exist");
+    }
+
     // Capture the destination piece if it exists
     if (destination_slot.piece.get() != nullptr) {
         this->_capture_piece(destination_slot);
@@ -289,11 +286,45 @@ void Chessboard::_move_piece(
         utils::AudioPlayer::play_sound(MOVE);
     }
 
-    origin_slot.piece->get_sprite().setPosition(
+    // Handle pawn promotion, short castling and long castling
+    int row = this->current_user->get_id() == WHITE ? 7 : 0;
+
+    switch (required_move.type) {
+        case ChessMove::Type::PROMOTION:
+            this->_promote_piece(origin_slot);
+            break;
+        
+        case ChessMove::Type::LONG_CASTLE:
+            this->slots[row][3].piece = std::move(this->slots[row][0].piece);
+            this->slots[row][3].piece->get_sprite().setPosition(
+                this->slots[row][3].rect.getPosition());
+            
+            this->slots[row][3].piece->signal_piece_moved();
+            break;
+
+        case ChessMove::Type::SHORT_CASTLE:
+            this->slots[row][5].piece = std::move(this->slots[row][7].piece);
+            this->slots[row][5].piece->get_sprite().setPosition(
+                this->slots[row][5].rect.getPosition());
+            
+            this->slots[row][5].piece->signal_piece_moved();
+            break;
+        
+        case ChessMove::Type::NONE:
+            break;
+    }
+
+    // Move the piece pointer to the destination slot
+    destination_slot.piece = std::move(origin_slot.piece);
+
+    // Update the position of the piece
+    destination_slot.piece->get_sprite().setPosition(
         destination_slot.rect.getPosition());
 
-    destination_slot.piece = std::move(origin_slot.piece);
+    // Specify that the piece has moved
+    destination_slot.piece->signal_piece_moved();
     
+    // Update the status of the different slots
     origin_slot.status = EMPTY;
     destination_slot.status = OCCUPIED;
 }
@@ -320,6 +351,81 @@ void Chessboard::_capture_piece(BoardSlot& slot) {
 }
 
 /**
+ * @brief Promotes a piece
+ * 
+ * @param slot
+ */
+void Chessboard::_promote_piece(BoardSlot& slot) {
+    std::vector<sf::RectangleShape> rectangles;
+    std::vector<std::shared_ptr<ChessPiece>> pieces = {
+        std::make_shared<Rook>(Rook(this->current_user->get_id())),
+        std::make_shared<Knight>(Knight(this->current_user->get_id())),
+        std::make_shared<Bishop>(Bishop(this->current_user->get_id())),
+        std::make_shared<Queen>(Queen(this->current_user->get_id()))};
+
+    for (int i = 0; i < pieces.size(); ++i) {
+        rectangles.push_back(this->slots[i + 2][0].checked_rect);
+        pieces[i]->get_sprite().setPosition(rectangles[i].getPosition());
+
+        this->window.draw(rectangles[i]);
+        pieces[i]->draw(this->window);
+    }
+
+    this->window.display();
+    
+    // Wait for a click event
+    sf::Event event;
+    int selected_row = -1;
+
+    while (true) {
+        this->window.waitEvent(event);
+
+        if (event.type == sf::Event::KeyPressed &&
+                event.key.code == sf::Keyboard::Escape){
+            this->window.close();
+            break;
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            sf::Vector2i position = sf::Mouse::getPosition(this->window);
+
+            if (!utils::helpers::is_position_on_window(position)) {
+                continue;
+            }
+            else {
+                selected_row = position.y / utils::Settings::get_cell_size();
+                break;
+            }
+        }
+    }
+
+    slot.piece = nullptr;
+    auto id = this->current_user->get_id();
+
+    switch (selected_row) {
+        case 2:
+            slot.piece = std::make_shared<Rook>(Rook(id));
+            break;
+        
+        case 3:
+            slot.piece = std::make_shared<Knight>(Knight(id));
+            break;
+        
+        case 4:
+            slot.piece = std::make_shared<Bishop>(Bishop(id));
+            break;
+        
+        case 5:
+            slot.piece = std::make_shared<Queen>(Queen(id));
+            break;
+        
+        default:
+            slot.piece = std::make_shared<Queen>(Queen(id));
+            break;
+    }
+}
+
+/**
  * @brief Clear the highlighted
  * 
  */
@@ -337,18 +443,14 @@ void Chessboard::_clear_highlighted_slots() {
  * @param position 
  */
 void Chessboard::_on_mouse_clicked(const sf::Vector2i& position) {
-    auto cell_size = utils::Settings::get_cell_size();
-
     // Check that the position is in the window
-    if ((position.x < 0 || position.x > 8 * cell_size) ||
-            (position.y < 0 || position.y > 8 * cell_size)) {
-        
+    if (!utils::helpers::is_position_on_window(position)) {
         return;
     }
 
     sf::Vector2i cell_position(
-        position.y / cell_size,
-        position.x / cell_size);
+        position.y / utils::Settings::get_cell_size(),
+        position.x / utils::Settings::get_cell_size());
 
     switch (this->slots[cell_position.x][cell_position.y].status) {
         case HIGHLIGHTED:
@@ -386,28 +488,56 @@ void Chessboard::_on_occupied_slot_clicked(
 
     // Filter the possible moves based on the checks    
     BoardSlots slots_copy;
-    std::vector<sf::Vector2i> filtered_moves;
-    std::vector<sf::Vector2i> moves =
+    this->possible_moves.clear();
+
+    std::vector<ChessMove> moves =
         this->slots[position.x][position.y].piece->compute_possible_moves(
         this->slots);
 
+    int row = this->current_user->get_id() == WHITE ? 7 : 0;
+    bool short_castle_enabled = false;
+    bool long_castle_enabled = false;
+
     for (auto move : moves) {
+        if (move.type == ChessMove::Type::SHORT_CASTLE ||
+                move.type == ChessMove::Type::LONG_CASTLE) {
+            
+            if (this->current_user->is_checked(this->slots)) {
+                continue;
+            }
+        }
+
         slots_copy = this->slots;
 
-        slots_copy[move.x][move.y].piece = nullptr;
+        slots_copy[move.position.x][move.position.y].piece = nullptr;
 
-        slots_copy[move.x][move.y].piece = std::move(
+        slots_copy[move.position.x][move.position.y].piece = std::move(
             slots_copy[position.x][position.y].piece);
 
         slots_copy[position.x][position.y].status = EMPTY;
-        slots_copy[move.x][move.y].status = OCCUPIED;
+        slots_copy[move.position.x][move.position.y].status = OCCUPIED;
 
         if (!this->current_user->is_checked(slots_copy)) {
-            filtered_moves.push_back(move);
+            if (move.position == sf::Vector2i(row, 5)) {
+                short_castle_enabled = true;
+            }
+            else if (move.position == sf::Vector2i(row, 3)) {
+                long_castle_enabled = true;
+            }
+            else if (move.type == ChessMove::Type::SHORT_CASTLE &&
+                    !short_castle_enabled) {
+                continue;
+            }
+            else if (move.type == ChessMove::Type::LONG_CASTLE &&
+                        !long_castle_enabled) {
+                continue;
+            }
+
+            this->possible_moves.push_back(move);
         }
     }
 
-    this->_show_possible_moves(filtered_moves);
+    this->_show_possible_moves(this->possible_moves);
 }
 
 /**

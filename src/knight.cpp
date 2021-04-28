@@ -18,11 +18,11 @@ void Knight::draw(sf::RenderWindow& window) const {
     window.draw(this->sprite);
 }
 
-std::vector<sf::Vector2i> Knight::compute_possible_moves(
+std::vector<ChessMove> Knight::compute_possible_moves(
         const BoardSlots& slots) const {
             
     auto position = this->get_position();
-    std::vector<sf::Vector2i> possible_moves;
+    std::vector<ChessMove> possible_moves;
     std::vector<sf::Vector2i> offsets = {
         sf::Vector2i(-2, -1),
         sf::Vector2i(-2, 1),

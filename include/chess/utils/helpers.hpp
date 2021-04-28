@@ -3,6 +3,7 @@
 
 #include <string>
 #include "chess/piece_data.hpp"
+#include "chess/chess_move.hpp"
 #include "chess/chess_sound.hpp"
 #include "chess/utils/settings.hpp"
 
@@ -16,6 +17,10 @@ std::string get_sound_filepath(ChessSound sound_id);
 
 bool is_position_on_board(int x, int y);
 bool is_position_on_board(const sf::Vector2i& position);
+bool is_position_on_board(const ChessMove& move);
+
+bool is_position_on_window(const sf::Vector2i& position);
+
 sf::Vector2f to_drawing_position(int x, int y);
 sf::Vector2f to_drawing_position(const sf::Vector2i& index);
 sf::Vector2i to_board_index(float x, float y);

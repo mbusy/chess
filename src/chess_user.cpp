@@ -224,7 +224,7 @@ bool ChessUser::is_checked(const BoardSlots& slots) {
  * @return false 
  */
 bool ChessUser::has_legal_moves(const BoardSlots& slots) {
-    std::vector<sf::Vector2i> possible_moves;
+    std::vector<ChessMove> possible_moves;
     sf::Vector2i position;
     BoardSlots slots_copy;
     std::shared_ptr<ChessPiece> king = nullptr;
@@ -249,11 +249,11 @@ bool ChessUser::has_legal_moves(const BoardSlots& slots) {
 
             for (const auto& move : possible_moves) {
                 slots_copy = slots;
-                slots_copy[move.x][move.y].piece = std::move(
+                slots_copy[move.position.x][move.position.y].piece = std::move(
                     slots_copy[position.x][position.y].piece);
 
                 slots_copy[position.x][position.y].status = EMPTY;
-                slots_copy[move.x][move.y].status = OCCUPIED;
+                slots_copy[move.position.x][move.position.y].status = OCCUPIED;
 
                 if (!this->is_checked(slots_copy)) {
                     return true;
@@ -272,11 +272,11 @@ bool ChessUser::has_legal_moves(const BoardSlots& slots) {
     for (const auto& move : possible_moves) {
         slots_copy = slots;
 
-        slots_copy[move.x][move.y].piece = std::move(
+        slots_copy[move.position.x][move.position.y].piece = std::move(
                     slots_copy[position.x][position.y].piece);
 
         slots_copy[position.x][position.y].status = EMPTY;
-        slots_copy[move.x][move.y].status = OCCUPIED;
+        slots_copy[move.position.x][move.position.y].status = OCCUPIED;
 
         if (!this->is_checked(slots_copy)) {
             return true;

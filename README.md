@@ -6,7 +6,7 @@
 </p>
 <!-- end -->
 
-A simple C++ chess game.
+A simple C++ chess game, using the SFML library.
 
 ## Installation
 ### Prerequisites
@@ -25,7 +25,7 @@ You can now build the project:
 make
 ```
 
-This will generate the `chess` executable
+This will generate the `chess` executable.
 
 ## Usage
 To launch a chess game, just launch the generated `chess` executable:

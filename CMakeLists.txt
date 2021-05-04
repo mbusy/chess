@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 # SFML lib
 # set(SFML_DIR "/usr/local/lib/cmake/SFML/")
 
-find_package(SFML 2.5 COMPONENTS graphics audio window REQUIRED)
+find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
 
 set(SRC_DIRECTORY src)
 set(INCLUDE_DIRECTORY include)
@@ -34,6 +34,7 @@ add_executable(${PROJECT_NAME}
     ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
+    sfml-system
+    sfml-window
     sfml-graphics
-    sfml-audio
-    sfml-window)
+    sfml-audio)

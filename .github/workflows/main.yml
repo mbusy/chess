@@ -5,50 +5,51 @@ name: Main workflow
 on: [push, pull_request]
 
 jobs:
-
-  
   build-test:
+    name: build and test
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Install SFML dependencies
-        run: |
-          sudo apt-get install libx11-dev
-          sudo apt-get install xorg-dev
-          sudo apt-get install freeglut3-dev
-          sudo apt-get install libudev-dev
-          sudo apt-get install libopenal-dev libalut-dev
-          sudo apt-get install libvorbis-dev
-          sudo apt-get install libflac-dev
-      
-      - name: Retrieve SFML source code
-        run: git clone --branch 2.5.1 https://github.com/SFML/SFML.git
+    - uses: actions/checkout@v2
 
-      - name: Build SFML
-        run: |
-          cd SFML
-          mkdir build
-          cd build
-          cmake ..
-          make
-      
-      - name: Install SFML
-        run: |
-          cd SFML/build
-          sudo make install
+    - name: Install SFML dependencies
+      run: |
+        sudo apt-get install libx11-dev
+        sudo apt-get install xorg-dev
+        sudo apt-get install freeglut3-dev
+        sudo apt-get install libudev-dev
+        sudo apt-get install libopenal-dev libalut-dev
+        sudo apt-get install libvorbis-dev
+        sudo apt-get install libflac-dev
+    
+    - name: Retreive SFML source code
+      run: git clone --branch 2.5.1 https://github.com/SFML/SFML.git
+    
+    - name: Build SFML
+      run: |
+        cd SFML
+        mkdir build
+        cd build
+        cmake ..
+        make
 
-      - name: Configure the project
-        run: |
-          mkdir build
-          cd build
-          cmake ..
-      
-      - name: Build the project
-        run: |
-          cd build
-          make
+    - name: Install SFML
+      run: |
+        cd SFML/build
+        sudo make install
 
-      - name: Dummy step
-        run: cat README.md
+    - name: Configure the project
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    
+    - name: Build the project
+      run: |
+        cd build
+        make
+      
+    - name: Dummy step
+      run: |
+        ls build/
+        cat README.md

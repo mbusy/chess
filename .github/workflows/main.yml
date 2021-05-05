@@ -42,6 +42,15 @@ jobs:
       run: |
         cd SFML/build
         sudo make install
+    
+    - name: Install Gtest
+      run: |
+        sudo apt-get install libgtest-dev
+        cd /usr/src/gtest
+        sudo mkdir build
+        cd build
+        sudo cmake ..
+        sudo make install
 
     - name: Configure the project
       run: |
@@ -53,8 +62,8 @@ jobs:
       run: |
         cd build
         make
-      
-    - name: Dummy step
+    
+    - name: Testing the project
       run: |
-        cd build/tests
-        ./run_tests
+        ls build/
+        cat README.md

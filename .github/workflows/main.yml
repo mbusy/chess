@@ -4,7 +4,7 @@ name: Main workflow
 
 on: 
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - master
@@ -42,6 +42,16 @@ jobs:
       run: |
         cd SFML/build
         sudo make install
+    
+    - name: Install Gtest manually
+      run: |
+        sudo apt-get install libgtest-dev
+        cd /usr/src/gtest
+        sudo mkdir build
+        cd build
+        sudo cmake ..
+        sudo make
+        sudo cp lib/*.a /usr/lib
 
     - name: Configure the project
       run: |
@@ -53,8 +63,9 @@ jobs:
       run: |
         cd build
         make
-      
-    - name: Dummy step
+    
+    - name: Testing the project
       run: |
-        ls build/
-        cat README.md
+        cd build/tests
+        ./run_tests
+        

@@ -2,7 +2,12 @@
 
 name: Main workflow
 
-on: [push, pull_request]
+on: 
+  pull_request:
+    types: [opened]
+  push:
+    branches:
+      - master
 
 jobs:
   build-test:

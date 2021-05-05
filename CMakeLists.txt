@@ -38,3 +38,5 @@ target_link_libraries(${PROJECT_NAME}
     sfml-window
     sfml-graphics
     sfml-audio)
+
+add_subdirectory(tests)

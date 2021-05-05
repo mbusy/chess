@@ -56,5 +56,5 @@ jobs:
       
     - name: Dummy step
       run: |
-        ls build/
-        cat README.md
+        cd build/tests
+        ./run_tests
